@@ -1,5 +1,5 @@
 /* ============================================================
-   THE SOFT MACHINE — Componentes compartidos
+   THE SOFT MACHINE — Componentes compartidos (FIX FINAL NAV)
    ============================================================ */
 
 const SITE_NAME     = "The Soft Machine";
@@ -17,20 +17,21 @@ const NAV_ITEMS = [
   { label: "Acerca de", href: "acerca.html",      id: "acerca"    },
 ];
 
-/* ── rootPath (FIX GitHub Pages) ───────────────────────── */
+/* ── ROOT PATH (SOLUCIÓN REAL) ─────────────────────────── */
 function rootPath() {
-  const parts = location.pathname.split('/').filter(Boolean);
+  const path = location.pathname;
+  const segments = path.split('/').filter(Boolean);
 
-  // GitHub Pages → /repo-name/
-  if (location.hostname.includes('github.io')) {
-    return parts.length > 0 ? `/${parts[0]}/` : '/';
+  // Si estás dentro de subcarpeta (ej: /articulos/ejemplo.html)
+  if (segments.length > 1) {
+    return '../';
   }
 
-  // Local
+  // Si estás en raíz
   return './';
 }
 
-/* ── Detectar página actual ─────────────────────────────── */
+/* ── Detectar página actual ───────────────────────────── */
 function getCurrentPage() {
   let path = location.pathname.toLowerCase();
 
@@ -43,7 +44,7 @@ function getCurrentPage() {
   return path || 'index.html';
 }
 
-/* ── Reloj ─────────────────────────────────────────────── */
+/* ── Reloj ───────────────────────────────────────────── */
 function startClock() {
   const days = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
 
@@ -67,7 +68,7 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-/* ── Contador ──────────────────────────────────────────── */
+/* ── Contador ────────────────────────────────────────── */
 function updateCounter() {
   const el = document.getElementById('visit-counter');
   if (!el) return;
@@ -79,7 +80,7 @@ function updateCounter() {
   el.textContent = String(count).padStart(6,'0');
 }
 
-/* ── Header ────────────────────────────────────────────── */
+/* ── Header ─────────────────────────────────────────── */
 function renderHeader(breadcrumbExtra) {
   const root = rootPath();
   const current = getCurrentPage();
@@ -126,7 +127,7 @@ function renderHeader(breadcrumbExtra) {
   startClock();
 }
 
-/* ── Sidebar ───────────────────────────────────────────── */
+/* ── Sidebar ─────────────────────────────────────────── */
 function renderSidebar() {
   const root = rootPath();
 
@@ -190,7 +191,7 @@ function renderSidebar() {
   }
 }
 
-/* ── Footer ───────────────────────────────────────────── */
+/* ── Footer ─────────────────────────────────────────── */
 function renderFooter() {
   const root = rootPath();
 
@@ -208,7 +209,7 @@ function renderFooter() {
   document.getElementById('site-footer').innerHTML = html;
 }
 
-/* ── Init ─────────────────────────────────────────────── */
+/* ── Init ───────────────────────────────────────────── */
 function initSite(opts = {}) {
   renderHeader(opts.breadcrumb);
   renderSidebar();
