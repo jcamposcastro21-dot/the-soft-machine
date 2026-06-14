@@ -17,28 +17,23 @@ const NAV_ITEMS = [
   { label: "Acerca de", href: "acerca.html",      id: "acerca"    },
 ];
 
-/* ── rootPath ───────────────────────────────────────────── */
+/* ── rootPath (FIX GitHub Pages) ───────────────────────── */
 function rootPath() {
-  const depth = location.pathname.split('/').filter(Boolean).length;
+  const parts = location.pathname.split('/').filter(Boolean);
 
-  if (location.protocol === 'file:') {
-    const parts = location.pathname.split('/');
-    const idx = parts.findIndex(p => p.toLowerCase() === 'the-soft-machine');
-
-    if (idx === -1) return './';
-
-    const depth2 = parts.length - 1 - idx;
-    return depth2 <= 1 ? './' : '../'.repeat(depth2 - 1);
+  // GitHub Pages → /repo-name/
+  if (location.hostname.includes('github.io')) {
+    return parts.length > 0 ? `/${parts[0]}/` : '/';
   }
 
-  return depth <= 1 ? './' : '../'.repeat(depth - 1);
+  // Local
+  return './';
 }
 
 /* ── Detectar página actual ─────────────────────────────── */
 function getCurrentPage() {
   let path = location.pathname.toLowerCase();
 
-  // Detecta secciones (subcarpetas)
   if (path.includes('/articulos/')) return 'articulos.html';
   if (path.includes('/ensayos/')) return 'ensayos.html';
   if (path.includes('/opiniones/')) return 'opiniones.html';
