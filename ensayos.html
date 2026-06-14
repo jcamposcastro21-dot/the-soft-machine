@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensayos — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Ensayos <span>Textos largos, ideas, exploraciones</span>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           ENSAYOS
+           Solo contenido tipo "ensayo"
+           ══════════════════════════════════════════════════ -->
+      <table class="article-table">
+        <thead>
+          <tr>
+            <th style="width:55%">Título</th>
+            <th style="width:12%">Tipo</th>
+            <th style="width:13%">Fecha</th>
+            <th style="width:10%">Lecturas</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>
+              <a class="art-title" href="articulos/ejemplo.html">La máquina que aprendió a quejarse</a>
+              <div class="art-excerpt">Sobre el lenguaje del malestar en sistemas que no deberían tenerlo.</div>
+            </td>
+            <td><span class="tag ensayo">ensayo</span></td>
+            <td class="art-date">2025-06-12</td>
+            <td class="art-reads">1,204</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">William S. Burroughs nunca tuvo newsletter</a>
+              <div class="art-excerpt">Una nota larga sobre cut-ups, distribución y publicar fuera del sistema editorial.</div>
+            </td>
+            <td><span class="tag ensayo">ensayo</span></td>
+            <td class="art-date">2025-05-28</td>
+            <td class="art-reads">916</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'ensayos' });
+</script>
+</body>
+</html>

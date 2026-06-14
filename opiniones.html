@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opiniones — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Opiniones <span>Textos cortos, posiciones, fricciones</span>
+      </div>
+
+      <table class="article-table">
+        <thead>
+          <tr>
+            <th style="width:55%">Título</th>
+            <th style="width:12%">Tipo</th>
+            <th style="width:13%">Fecha</th>
+            <th style="width:10%">Lecturas</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">El problema no es la IA, es que nos aburrimos antes</a>
+              <div class="art-excerpt">Una opinión corta y mal recibida sobre atención y algoritmos.</div>
+            </td>
+            <td><span class="tag opinion">opinión</span></td>
+            <td class="art-date">2025-06-05</td>
+            <td class="art-reads">3,771</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">Notas sobre leer en otro idioma</a>
+              <div class="art-excerpt">¿Se pierde algo cuando se lee una traducción?</div>
+            </td>
+            <td><span class="tag opinion">opinión</span></td>
+            <td class="art-date">2025-05-19</td>
+            <td class="art-reads">657</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'opiniones' });
+</script>
+</body>
+</html>

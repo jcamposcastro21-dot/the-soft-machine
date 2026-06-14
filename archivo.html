@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archivo — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Archivo completo <span>Todas las entradas — más recientes primero</span>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           ARCHIVO
+           Mismo formato que la homepage.
+           Añade filas para cada artículo nuevo.
+           ══════════════════════════════════════════════════ -->
+      <table class="article-table">
+        <thead>
+          <tr>
+            <th style="width:55%">Título</th>
+            <th style="width:12%">Tipo</th>
+            <th style="width:13%">Fecha</th>
+            <th style="width:10%">Lecturas</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>
+              <a class="art-title" href="articulos/ejemplo.html">La máquina que aprendió a quejarse</a>
+              <div class="art-excerpt">Sobre el lenguaje del malestar en sistemas que no deberían tenerlo.</div>
+            </td>
+            <td><span class="tag ensayo">ensayo</span></td>
+            <td class="art-date">2025-06-12</td>
+            <td class="art-reads">1,204</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">Tres fotos de una ciudad que ya no existe</a>
+              <div class="art-excerpt">Archivo fotográfico personal. Santiago, 2008–2011.</div>
+            </td>
+            <td><span class="tag foto">foto</span></td>
+            <td class="art-date">2025-06-09</td>
+            <td class="art-reads">488</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">El problema no es la IA, es que nos aburrimos antes</a>
+              <div class="art-excerpt">Una opinión corta y mal recibida sobre por qué la crisis de atención precede a cualquier algoritmo.</div>
+            </td>
+            <td><span class="tag opinion">opinión</span></td>
+            <td class="art-date">2025-06-05</td>
+            <td class="art-reads">3,771</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">William S. Burroughs nunca tuvo newsletter</a>
+              <div class="art-excerpt">Una nota larga sobre cut-ups, distribución y publicar fuera del sistema editorial.</div>
+            </td>
+            <td><span class="tag ensayo">ensayo</span></td>
+            <td class="art-date">2025-05-28</td>
+            <td class="art-reads">916</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">Links de la semana — vol. 14</a>
+              <div class="art-excerpt">Lecturas, papers, videos y cosas raras que encontré esta semana.</div>
+            </td>
+            <td><span class="tag links">links</span></td>
+            <td class="art-date">2025-05-23</td>
+            <td class="art-reads">2,103</td>
+          </tr>
+
+          <tr>
+            <td>
+              <a class="art-title" href="#">Notas sobre leer en otro idioma</a>
+              <div class="art-excerpt">¿Se pierde algo cuando se lee una traducción? Sí. ¿Importa?</div>
+            </td>
+            <td><span class="tag opinion">opinión</span></td>
+            <td class="art-date">2025-05-19</td>
+            <td class="art-reads">657</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'archivo' });
+</script>
+</body>
+</html>
