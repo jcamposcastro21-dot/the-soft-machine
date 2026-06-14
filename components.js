@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { label: "Ensayos",   href: "ensayos.html",     id: "ensayos"   },
   { label: "Artículos", href: "articulos.html",   id: "articulos" },
   { label: "Opiniones", href: "opiniones.html",   id: "opiniones" },
-  { label: "Miscelánea",href: "miscelaneos.html", id: "miscelaneos"},
+  { label: "Miscelánea",href: "miscelanea.html", id: "miscelanea"},
   { label: "Acerca de", href: "acerca.html",      id: "acerca"    },
 ];
 
