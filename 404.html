@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <script>
-    const path = location.pathname;
-    const repo = "/the-soft-machine";
+    (function() {
+      const repo = "/the-soft-machine";
+      let path = location.pathname;
 
-    sessionStorage.setItem("redirect", path);
-    location.replace(repo + "/index.html");
+      // Evitar loop infinito
+      if (path.endsWith("index.html")) return;
+
+      // Guardar ruta original
+      sessionStorage.setItem("redirect", path);
+
+      // Redirigir correctamente
+      location.replace(repo + "/index.html");
+    })();
   </script>
 </head>
 <body></body>
