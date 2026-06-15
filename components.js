@@ -1,10 +1,15 @@
 /* ============================================================
-   THE SOFT MACHINE — Componentes compartidos (FIX FINAL NAV)
+   THE SOFT MACHINE — Componentes + SPA-lite (NO 404)
    ============================================================ */
 
 const SITE_NAME     = "The Soft Machine";
 const SITE_SUBTITLE = "Artículos · Ensayos · Opiniones · Miscelánea";
 const SITE_TAGLINE  = "Archivo personal de escritura. Sin algoritmo. Sin newsletter.";
+
+/* ── BASE PATH (FIJO PARA GITHUB PAGES) ───────────────────── */
+function getBase() {
+  return '/the-soft-machine/';
+}
 
 /* 🔴 SIN "/" AL INICIO */
 const NAV_ITEMS = [
@@ -17,18 +22,67 @@ const NAV_ITEMS = [
   { label: "Acerca de", href: "acerca.html",      id: "acerca"    },
 ];
 
-/* ── ROOT PATH (SOLUCIÓN REAL) ─────────────────────────── */
-function rootPath() {
-  const path = location.pathname;
-  const segments = path.split('/').filter(Boolean);
+/* ── ROUTER: resolver ruta ───────────────────────────────── */
+function resolveRoute() {
+  const redirect = sessionStorage.getItem("redirect");
 
-  // Si estás dentro de subcarpeta (ej: /articulos/ejemplo.html)
-  if (segments.length > 1) {
-    return '../';
+  if (redirect) {
+    sessionStorage.removeItem("redirect");
+    return redirect.replace(getBase(), '');
   }
 
-  // Si estás en raíz
-  return './';
+  return location.pathname.replace(getBase(), '') || 'index.html';
+}
+
+/* ── ROUTER: cargar página ─────────────────────────────── */
+async function loadPage(path) {
+  const base = getBase();
+  const cleanPath = path || 'index.html';
+
+  try {
+    const res = await fetch(base + cleanPath);
+    const html = await res.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const content = doc.querySelector('#main-content');
+
+    if (!content) {
+      document.querySelector('#app').innerHTML = "<h1>⚠️ Falta #main-content</h1>";
+      return;
+    }
+
+    document.querySelector('#app').innerHTML = content.innerHTML;
+
+    // 🔁 re-render UI (por si hay elementos dinámicos)
+    startClock();
+    updateCounter();
+
+  } catch (err) {
+    document.querySelector('#app').innerHTML = "<h1>Contenido no encontrado</h1>";
+  }
+}
+
+/* ── SPA navegación ─────────────────────────────────────── */
+function enableSPA() {
+  document.body.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+
+    const href = a.getAttribute('href');
+
+    if (!href || href.startsWith('http') || href.startsWith('#')) return;
+
+    e.preventDefault();
+
+    history.pushState({}, '', getBase() + href);
+    loadPage(href);
+  });
+
+  window.addEventListener('popstate', () => {
+    loadPage(resolveRoute());
+  });
 }
 
 /* ── Detectar página actual ───────────────────────────── */
@@ -82,18 +136,18 @@ function updateCounter() {
 
 /* ── Header ─────────────────────────────────────────── */
 function renderHeader(breadcrumbExtra) {
-  const root = rootPath();
+  const base = getBase();
   const current = getCurrentPage();
 
   const navHTML = NAV_ITEMS.map(item => {
     const isActive = current === item.href.toLowerCase();
     const active = isActive ? ' class="active"' : '';
-    const href   = root + item.href;
+    const href   = base + item.href;
 
-    return `<li${active}><a href="${href}">${item.label}</a></li>`;
+    return `<li${active}><a href="${item.href}">${item.label}</a></li>`;
   }).join('');
 
-  const bcBase = `<a href="${root}index.html">thesoftmachine.net</a>`;
+  const bcBase = `<a href="${base}index.html">thesoftmachine.net</a>`;
 
   const currentItem = NAV_ITEMS.find(i => i.href.toLowerCase() === current);
   const currentLabel = currentItem ? currentItem.label : 'Inicio';
@@ -106,7 +160,7 @@ function renderHeader(breadcrumbExtra) {
 <header class="corp-header">
   <div class="corp-header-inner">
     <div>
-      <div class="site-title"><a href="${root}index.html">${SITE_NAME}</a></div>
+      <div class="site-title"><a href="index.html">${SITE_NAME}</a></div>
       <div class="site-subtitle">${SITE_SUBTITLE}</div>
     </div>
     <div class="header-meta">
@@ -124,13 +178,10 @@ function renderHeader(breadcrumbExtra) {
 <div class="breadcrumb">${bc}</div>`;
 
   document.getElementById('site-header').innerHTML = html;
-  startClock();
 }
 
 /* ── Sidebar ─────────────────────────────────────────── */
 function renderSidebar() {
-  const root = rootPath();
-
   const html = `
 <div class="sidebar-module">
   <div class="sidebar-module-header">👁 Visitas totales</div>
@@ -144,45 +195,14 @@ function renderSidebar() {
   <div class="sidebar-module-header">📁 Categorías</div>
   <div class="sidebar-module-body">
     <ul class="cat-list">
-      <li><a href="${root}ensayos.html">Ensayos</a><span class="cat-count">14</span></li>
-      <li><a href="${root}articulos.html">Artículos</a><span class="cat-count">9</span></li>
-      <li><a href="${root}opiniones.html">Opiniones</a><span class="cat-count">23</span></li>
-      <li><a href="${root}miscelaneos.html">Miscelánea</a><span class="cat-count">5</span></li>
+      <li><a href="ensayos.html">Ensayos</a></li>
+      <li><a href="articulos.html">Artículos</a></li>
+      <li><a href="opiniones.html">Opiniones</a></li>
+      <li><a href="miscelaneos.html">Miscelánea</a></li>
     </ul>
   </div>
 </div>
-
-<div class="sidebar-module">
-  <div class="sidebar-module-header">🕐 Recientes</div>
-  <div class="sidebar-module-body">
-    <ul class="recent-list">
-      <li><a href="${root}articulos/ejemplo.html">La máquina que aprendió a quejarse</a><div class="recent-meta">12 jun · ensayo</div></li>
-      <li><a href="#">El problema no es la IA</a><div class="recent-meta">05 jun · opinión</div></li>
-      <li><a href="#">Burroughs nunca tuvo newsletter</a><div class="recent-meta">28 may · ensayo</div></li>
-    </ul>
-  </div>
-</div>
-
-<div class="sidebar-module">
-  <div class="sidebar-module-header">ℹ Acerca de</div>
-  <div class="sidebar-module-body">
-    <div class="about-box">
-      <strong>${SITE_NAME}</strong> es un archivo personal de escritura.<br><br>
-      ${SITE_TAGLINE}
-    </div>
-  </div>
-</div>
-
-<div class="sidebar-module">
-  <div class="sidebar-module-header">📡 Sindicación</div>
-  <div class="sidebar-module-body">
-    <div class="syndication-links">
-      <a href="${root}feed.xml">[ RSS 2.0 ]</a><br>
-      <a href="${root}atom.xml">[ Atom ]</a><br>
-      <a href="${root}feed.json">[ JSON Feed ]</a>
-    </div>
-  </div>
-</div>`;
+`;
 
   const el = document.getElementById('site-sidebar');
   if (el) {
@@ -193,25 +213,26 @@ function renderSidebar() {
 
 /* ── Footer ─────────────────────────────────────────── */
 function renderFooter() {
-  const root = rootPath();
-
   const html = `
 <footer class="corp-footer">
   <span>© ${SITE_NAME} — Todos los derechos reservados</span>
   <span>
-    <a href="${root}index.html">thesoftmachine.net</a> |
-    <a href="${root}acerca.html">Contacto</a> |
-    <a href="${root}archivo.html">Mapa del sitio</a>
+    <a href="index.html">thesoftmachine.net</a> |
+    <a href="acerca.html">Contacto</a> |
+    <a href="archivo.html">Mapa del sitio</a>
   </span>
-  <span>Generado en 0.042s · HTML estático</span>
+  <span>HTML estático · SPA-lite</span>
 </footer>`;
 
   document.getElementById('site-footer').innerHTML = html;
 }
 
-/* ── Init ───────────────────────────────────────────── */
+/* ── INIT ───────────────────────────────────────────── */
 function initSite(opts = {}) {
   renderHeader(opts.breadcrumb);
   renderSidebar();
   renderFooter();
+
+  enableSPA();
+  loadPage(resolveRoute());
 }
