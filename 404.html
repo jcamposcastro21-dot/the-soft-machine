@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    const path = location.pathname;
+    const repo = "/the-soft-machine";
+
+    sessionStorage.setItem("redirect", path);
+    location.replace(repo + "/index.html");
+  </script>
+</head>
+<body></body>
+</html>
