@@ -10,10 +10,10 @@
 
 <div id="site-header"></div>
 
-<!-- 🔴 CONTENEDOR SPA (CLAVE) -->
+<!-- 🔴 CONTENEDOR SPA -->
 <div id="app">
 
-  <!-- 🔴 CONTENIDO CARGABLE -->
+  <!-- 🔴 CONTENIDO BASE (IMPORTANTE: se reemplaza dinámicamente) -->
   <div id="main-content">
 
     <div class="page-wrap">
@@ -104,8 +104,21 @@
 <script>
   initSite();
 
-  // 🔥 OPCIONAL: scroll arriba en navegación SPA
-  window.addEventListener('popstate', () => window.scrollTo(0,0));
+  /* 🔥 FIX 1: scroll arriba en navegación SPA (también en clicks) */
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("http") || href.startsWith("#")) return;
+
+    window.scrollTo(0, 0);
+  });
+
+  /* 🔥 FIX 2: back/forward */
+  window.addEventListener('popstate', () => {
+    window.scrollTo(0,0);
+  });
 </script>
 
 </body>
