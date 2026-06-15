@@ -1,17 +1,17 @@
 /* ============================================================
-   THE SOFT MACHINE — Componentes + SPA-lite (NO 404)
+   THE SOFT MACHINE — Componentes + SPA-lite (FIX FINAL)
    ============================================================ */
 
 const SITE_NAME     = "The Soft Machine";
 const SITE_SUBTITLE = "Artículos · Ensayos · Opiniones · Miscelánea";
 const SITE_TAGLINE  = "Archivo personal de escritura. Sin algoritmo. Sin newsletter.";
 
-/* ── BASE PATH (FIJO PARA GITHUB PAGES) ───────────────────── */
+/* ── BASE PATH ───────────────────────────────────────── */
 function getBase() {
   return '/the-soft-machine/';
 }
 
-/* 🔴 SIN "/" AL INICIO */
+/* ── NAV ─────────────────────────────────────────────── */
 const NAV_ITEMS = [
   { label: "Inicio",    href: "index.html",       id: "inicio"    },
   { label: "Archivo",   href: "archivo.html",     id: "archivo"   },
@@ -22,22 +22,24 @@ const NAV_ITEMS = [
   { label: "Acerca de", href: "acerca.html",      id: "acerca"    },
 ];
 
-/* ── ROUTER: resolver ruta ───────────────────────────────── */
+/* ── ROUTER: resolver ruta ───────────────────────────── */
 function resolveRoute() {
   const redirect = sessionStorage.getItem("redirect");
 
   if (redirect) {
     sessionStorage.removeItem("redirect");
-    return redirect.replace(getBase(), '');
+    return redirect.replace(getBase(), '').replace(/^\/+/, '');
   }
 
-  return location.pathname.replace(getBase(), '') || 'index.html';
+  return location.pathname
+    .replace(getBase(), '')
+    .replace(/^\/+/, '') || 'index.html';
 }
 
-/* ── ROUTER: cargar página ─────────────────────────────── */
+/* ── ROUTER: cargar página ───────────────────────────── */
 async function loadPage(path) {
   const base = getBase();
-  const cleanPath = path || 'index.html';
+  const cleanPath = (path || 'index.html').replace(/^\/+/, '');
 
   try {
     const res = await fetch(base + cleanPath);
@@ -55,26 +57,35 @@ async function loadPage(path) {
 
     document.querySelector('#app').innerHTML = content.innerHTML;
 
-    // 🔁 re-render UI (por si hay elementos dinámicos)
+    /* 🔥 RE-RENDER COMPLETO */
+    renderHeader();
+    renderSidebar();
+    renderFooter();
+
     startClock();
     updateCounter();
 
   } catch (err) {
     document.querySelector('#app').innerHTML = "<h1>Contenido no encontrado</h1>";
+    console.error(err);
   }
 }
 
-/* ── SPA navegación ─────────────────────────────────────── */
+/* ── SPA navegación ─────────────────────────────────── */
 function enableSPA() {
   document.body.addEventListener('click', e => {
     const a = e.target.closest('a');
     if (!a) return;
 
-    const href = a.getAttribute('href');
+    if (a.target === "_blank") return;
+
+    let href = a.getAttribute('href');
 
     if (!href || href.startsWith('http') || href.startsWith('#')) return;
 
     e.preventDefault();
+
+    href = href.replace(/^\/+/, '');
 
     history.pushState({}, '', getBase() + href);
     loadPage(href);
@@ -85,20 +96,17 @@ function enableSPA() {
   });
 }
 
-/* ── Detectar página actual ───────────────────────────── */
+/* ── Detectar página actual ─────────────────────────── */
 function getCurrentPage() {
-  let path = location.pathname.toLowerCase();
+  let path = location.pathname
+    .replace(getBase(), '')
+    .replace(/^\/+/, '')
+    .toLowerCase();
 
-  if (path.includes('/articulos/')) return 'articulos.html';
-  if (path.includes('/ensayos/')) return 'ensayos.html';
-  if (path.includes('/opiniones/')) return 'opiniones.html';
-  if (path.includes('/miscelaneos/')) return 'miscelaneos.html';
-
-  path = path.split('/').pop();
   return path || 'index.html';
 }
 
-/* ── Reloj ───────────────────────────────────────────── */
+/* ── Reloj ─────────────────────────────────────────── */
 function startClock() {
   const days = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
 
@@ -122,7 +130,7 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-/* ── Contador ────────────────────────────────────────── */
+/* ── Contador ─────────────────────────────────────── */
 function updateCounter() {
   const el = document.getElementById('visit-counter');
   if (!el) return;
@@ -134,7 +142,7 @@ function updateCounter() {
   el.textContent = String(count).padStart(6,'0');
 }
 
-/* ── Header ─────────────────────────────────────────── */
+/* ── Header ───────────────────────────────────────── */
 function renderHeader(breadcrumbExtra) {
   const base = getBase();
   const current = getCurrentPage();
@@ -142,7 +150,6 @@ function renderHeader(breadcrumbExtra) {
   const navHTML = NAV_ITEMS.map(item => {
     const isActive = current === item.href.toLowerCase();
     const active = isActive ? ' class="active"' : '';
-    const href   = base + item.href;
 
     return `<li${active}><a href="${item.href}">${item.label}</a></li>`;
   }).join('');
@@ -180,7 +187,7 @@ function renderHeader(breadcrumbExtra) {
   document.getElementById('site-header').innerHTML = html;
 }
 
-/* ── Sidebar ─────────────────────────────────────────── */
+/* ── Sidebar ─────────────────────────────────────── */
 function renderSidebar() {
   const html = `
 <div class="sidebar-module">
@@ -211,7 +218,7 @@ function renderSidebar() {
   }
 }
 
-/* ── Footer ─────────────────────────────────────────── */
+/* ── Footer ───────────────────────────────────────── */
 function renderFooter() {
   const html = `
 <footer class="corp-footer">
@@ -227,7 +234,7 @@ function renderFooter() {
   document.getElementById('site-footer').innerHTML = html;
 }
 
-/* ── INIT ───────────────────────────────────────────── */
+/* ── INIT ─────────────────────────────────────────── */
 function initSite(opts = {}) {
   renderHeader(opts.breadcrumb);
   renderSidebar();
