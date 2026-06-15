@@ -236,3 +236,4 @@ function initSite(opts = {}) {
   enableSPA();
   loadPage(resolveRoute());
 }
+.
