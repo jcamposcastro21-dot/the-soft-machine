@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Links <span>Curaduría de enlaces externos</span>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           LISTA DE LINKS
+           Duplica un <li> por cada link nuevo.
+           ══════════════════════════════════════════════════ -->
+      <ul class="links-list">
+
+        <li>
+          <a class="link-title" href="https://arxiv.org/abs/2212.09251" target="_blank" rel="noopener">Constitutional AI: Harmlessness from AI Feedback</a>
+          <div class="link-desc">Paper de Anthropic sobre entrenar modelos con principios en vez de solo feedback humano.</div>
+          <div class="link-domain">arxiv.org · 2025-06-10</div>
+        </li>
+
+        <li>
+          <a class="link-title" href="https://www.mcsweeneys.net/" target="_blank" rel="noopener">McSweeney's Internet Tendency</a>
+          <div class="link-desc">Sigue siendo el mejor lugar para humor literario en internet.</div>
+          <div class="link-domain">mcsweeneys.net · 2025-06-08</div>
+        </li>
+
+        <li>
+          <a class="link-title" href="https://www.are.na/" target="_blank" rel="noopener">Are.na</a>
+          <div class="link-desc">Una red social para archivar y conectar ideas sin el ruido del resto de internet.</div>
+          <div class="link-domain">are.na · 2025-06-02</div>
+        </li>
+
+        <!--
+        <li>
+          <a class="link-title" href="https://ENLACE.com" target="_blank" rel="noopener">Título del link</a>
+          <div class="link-desc">Breve descripción de por qué vale la pena.</div>
+          <div class="link-domain">dominio.com · AAAA-MM-DD</div>
+        </li>
+        -->
+
+      </ul>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'links' });
+</script>
+</body>
+</html>

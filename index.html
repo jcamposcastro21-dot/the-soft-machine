@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="alternate" type="application/rss+xml" title="The Soft Machine — RSS" href="feed.xml">
+  <link rel="alternate" type="application/atom+xml" title="The Soft Machine — Atom" href="atom.xml">
+  <link rel="alternate" type="application/json" title="The Soft Machine — JSON Feed" href="feed.json">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <!-- ══════════════════════════════════════════════════
+           TABLA DE ARTÍCULOS
+           Para añadir un artículo: duplica una fila <tr>
+           y edita el título, href, tipo, fecha y lecturas.
+           Recuerda añadir la misma fila en archivo.html.
+           ══════════════════════════════════════════════════ -->
+      <div class="section-header">
+        Entradas recientes <span>Ordenado por fecha — más reciente primero</span>
+      </div>
+      <table class="article-table">
+        <thead>
+          <tr>
+            <th style="width:55%">Título / Extracto</th>
+            <th style="width:12%">Tipo</th>
+            <th style="width:13%">Fecha</th>
+            <th style="width:10%">Lecturas</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- ── Artículo 1 ── -->
+          <tr>
+            <td>
+              <a class="art-title" href="articulos/ejemplo.html">La máquina que aprendió a quejarse</a>
+              <div class="art-excerpt">Sobre el lenguaje del malestar en sistemas que no deberían tenerlo, y por qué nos importa de todas formas.</div>
+            </td>
+            <td><span class="tag ensayo">ensayo</span></td>
+            <td class="art-date">2025-06-12</td>
+            <td class="art-reads">—</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'inicio' });
+</script>
+</body>
+</html>

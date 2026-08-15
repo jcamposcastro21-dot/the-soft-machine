@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fotos — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Fotografía <span>Galería — más recientes primero</span>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           GRID DE FOTOS
+           Duplica un <figure> por cada foto. Usa imágenes
+           locales en /media/ o URLs externas directamente.
+           ══════════════════════════════════════════════════ -->
+      <div class="photo-grid">
+
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Providencia%2C_Santiago_de_Chile.jpg/640px-Providencia%2C_Santiago_de_Chile.jpg" alt="Providencia, Santiago de Chile">
+          <figcaption>Providencia, 2009</figcaption>
+        </figure>
+
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Santiago_de_noche.jpg/640px-Santiago_de_noche.jpg" alt="Santiago de noche">
+          <figcaption>Vista nocturna, 2010</figcaption>
+        </figure>
+
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Cerro_Santa_Luc%C3%ADa.jpg/640px-Cerro_Santa_Luc%C3%ADa.jpg" alt="Cerro Santa Lucía">
+          <figcaption>Cerro Santa Lucía, 2011</figcaption>
+        </figure>
+
+        <!--
+        <figure>
+          <img src="media/tu-foto.jpg" alt="descripción">
+          <figcaption>Pie de foto, año</figcaption>
+        </figure>
+        -->
+
+      </div>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'fotos' });
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "The Soft Machine",
+  "home_page_url": "https://jcamposcastro21-dot.github.io/the-soft-machine/",
+  "feed_url": "https://jcamposcastro21-dot.github.io/the-soft-machine/feed.json",
+  "description": "Archivo personal de escritura. Sin algoritmo. Sin newsletter.",
+  "language": "es",
+  "items": [
+    {
+      "id": "https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html",
+      "url": "https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html",
+      "title": "La máquina que aprendió a quejarse",
+      "summary": "Sobre el lenguaje del malestar en sistemas que no deberían tenerlo, y por qué nos importa de todas formas.",
+      "date_published": "2025-06-12T00:00:00Z",
+      "tags": ["ensayo"]
+    }
+  ]
+}

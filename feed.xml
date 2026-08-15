@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>The Soft Machine</title>
+  <link>https://jcamposcastro21-dot.github.io/the-soft-machine/</link>
+  <description>Archivo personal de escritura. Sin algoritmo. Sin newsletter.</description>
+  <language>es</language>
+  <lastBuildDate>Fri, 12 Jun 2025 00:00:00 GMT</lastBuildDate>
+
+  <!-- ══════════════════════════════════════════════════
+       Añade un <item> nuevo (arriba de los demás) por
+       cada artículo que publiques.
+       ══════════════════════════════════════════════════ -->
+  <item>
+    <title>La máquina que aprendió a quejarse</title>
+    <link>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html</link>
+    <guid>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html</guid>
+    <pubDate>Thu, 12 Jun 2025 00:00:00 GMT</pubDate>
+    <description>Sobre el lenguaje del malestar en sistemas que no deberían tenerlo, y por qué nos importa de todas formas.</description>
+    <category>ensayo</category>
+  </item>
+
+</channel>
+</rss>

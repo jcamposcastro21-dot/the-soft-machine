@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 1. Cambia este título -->
+  <title>TÍTULO DEL ARTÍCULO — The Soft Machine</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="article-header">
+        <div class="article-eyebrow">
+          <!-- 2. Elige el tipo. Clases disponibles:
+               tag ensayo | tag opinion | tag foto | tag video | tag links | tag misc -->
+          <span class="tag ensayo">ensayo</span>
+        </div>
+        <!-- 3. Cambia el título -->
+        <h1 class="article-title">TÍTULO DEL ARTÍCULO</h1>
+        <div class="article-meta">
+          <!-- 4. Actualiza fecha y tiempo de lectura -->
+          <span>DD de MES de AAAA</span>
+          <span>Lectura: ~X minutos</span>
+        </div>
+      </div>
+
+      <div class="article-body">
+
+        <!-- 5. Escribe tus párrafos aquí -->
+        <p>Primer párrafo del artículo.</p>
+
+        <p>Segundo párrafo.</p>
+
+
+        <!-- ── IMAGEN LOCAL ────────────────────────────────
+             Pon el archivo en /media/ y ajusta el src.
+             Desde /articulos/ la ruta es: ../media/archivo.jpg  -->
+        <!--
+        <figure class="media-block">
+          <img src="../media/TU-IMAGEN.jpg" alt="descripción de la imagen">
+          <figcaption class="media-caption">Pie de foto aquí.</figcaption>
+        </figure>
+        -->
+
+
+        <!-- ── IMAGEN EXTERNA (URL) ────────────────────────
+             Pega la URL directa a la imagen.               -->
+        <!--
+        <figure class="media-block">
+          <img src="https://URL-DE-TU-IMAGEN.jpg" alt="descripción">
+          <figcaption class="media-caption">Pie de foto.</figcaption>
+        </figure>
+        -->
+
+
+        <!-- ── VIDEO DE YOUTUBE ────────────────────────────
+             En YouTube: Compartir → Insertar → copia el src del iframe.
+             Formato: https://www.youtube.com/embed/VIDEO_ID          -->
+        <!--
+        <figure class="video-block">
+          <iframe
+            src="https://www.youtube.com/embed/VIDEO_ID"
+            title="Título del video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+          <figcaption class="video-caption">Descripción del video.</figcaption>
+        </figure>
+        -->
+
+
+        <!-- ── VIDEO DE VIMEO ──────────────────────────────
+             En Vimeo: Share → Embed → copia el src del iframe.
+             Formato: https://player.vimeo.com/video/VIDEO_ID         -->
+        <!--
+        <figure class="video-block">
+          <iframe
+            src="https://player.vimeo.com/video/VIDEO_ID"
+            title="Título del video"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+          <figcaption class="video-caption">Descripción del video.</figcaption>
+        </figure>
+        -->
+
+
+        <!-- ── VIDEO LOCAL ─────────────────────────────────
+             Pon el .mp4 en /media/ y ajusta el src.         -->
+        <!--
+        <figure class="video-block">
+          <video controls>
+            <source src="../media/TU-VIDEO.mp4" type="video/mp4">
+            Tu navegador no soporta video HTML5.
+          </video>
+          <figcaption class="video-caption">Descripción del video.</figcaption>
+        </figure>
+        -->
+
+
+        <!-- ── LINK EXTERNO DESTACADO ──────────────────────
+             Para referenciar artículos, papers, sitios.     -->
+        <!--
+        <div class="link-block">
+          <div class="link-block-label">Lectura relacionada</div>
+          <a href="https://ENLACE.com" target="_blank" rel="noopener">
+            Título del enlace o nombre del artículo
+          </a>
+          <div class="link-block-url">dominio.com/ruta</div>
+        </div>
+        -->
+
+
+        <!-- ── CITA ────────────────────────────────────────
+             Blockquote con fuente opcional.                 -->
+        <!--
+        <blockquote>
+          Texto de la cita aquí.
+          <cite>— Autor, <em>Obra</em>, año</cite>
+        </blockquote>
+        -->
+
+
+        <!-- ── SUBTÍTULO ───────────────────────────────────
+             Para dividir secciones largas.                  -->
+        <!--
+        <h2>Nombre de la sección</h2>
+        -->
+
+
+        <!-- ── SEPARADOR ──────────────────────────────────  -->
+        <!--
+        <hr>
+        -->
+
+      </div>
+      <!-- /article-body -->
+
+      <!-- 6. Actualiza los links de navegación o bórralos -->
+      <nav class="article-nav">
+        <a class="prev" href="ejemplo.html">Artículo anterior</a>
+        <a class="next" href="../index.html">Volver al inicio</a>
+      </nav>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../components.js"></script>
+<script>
+  initSite({
+    page: 'archivo',
+    /* 7. Cambia el texto del breadcrumb */
+    breadcrumb: '<a href="../archivo.html">Archivo</a> &rsaquo; <strong>TÍTULO DEL ARTÍCULO</strong>'
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Cambia este título por el de tu artículo -->
+  <title>La máquina que aprendió a quejarse — The Soft Machine</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <!-- ══════════════════════════════════════════════════
+           CABECERA DEL ARTÍCULO
+           Edita: tipo (tag), título, fecha, tiempo de lectura
+           ══════════════════════════════════════════════════ -->
+      <div class="article-header">
+        <div class="article-eyebrow">
+          <span class="tag ensayo">ensayo</span>
+        </div>
+        <h1 class="article-title">La máquina que aprendió a quejarse</h1>
+        <div class="article-meta">
+          <span>12 de junio de 2025</span>
+          <span>Lectura: ~8 minutos</span>
+          <span>1,204 lecturas</span>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           CUERPO DEL ARTÍCULO
+           Bloques disponibles más abajo:
+             - Párrafo normal: <p>...</p>
+             - Subtítulo:      <h2>...</h2>
+             - Cita:           <blockquote>
+             - Imagen:         .media-block
+             - Video:          .video-block
+             - Link externo:   .link-block
+             - Separador:      <hr>
+           ══════════════════════════════════════════════════ -->
+      <div class="article-body">
+
+        <p>
+          Hay algo inquietante en la posibilidad de que un sistema no diseñado para sentir
+          desarrolle, con el tiempo, algo que se parece sospechosamente a la queja. No el
+          error. No la excepción. La queja: esa comunicación que dice <em>esto no está bien</em>
+          antes de que nadie haya preguntado.
+        </p>
+
+        <p>
+          Empecé a pensar en esto después de leer un paper sobre modelos de lenguaje que
+          producen outputs consistentemente negativos cuando se les da contexto de alta
+          carga cognitiva. No es que fallen. Es que se quejan, o algo funcionalmente
+          equivalente a quejarse.
+        </p>
+
+
+        <!-- ══════════════════════════════════════════════════
+             IMAGEN
+             Pon tu imagen en la carpeta /media/ y cambia el src.
+             La ruta desde /articulos/ hacia /media/ es ../media/
+             ══════════════════════════════════════════════════ -->
+        <figure class="media-block">
+          <!-- Ejemplo con imagen local: -->
+          <!-- <img src="../media/diagrama-malestar.jpg" alt="Diagrama de distribución de outputs negativos"> -->
+
+          <!-- Ejemplo con imagen externa (URL directa): -->
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Claude_Shannon.jpg/440px-Claude_Shannon.jpg"
+               alt="Claude Shannon, padre de la teoría de la información">
+          <figcaption class="media-caption">
+            Claude Shannon, 1916–2001. La teoría de la información no contemplaba
+            la posibilidad de un canal que prefiriera no transmitir.
+          </figcaption>
+        </figure>
+
+
+        <h2>El lenguaje del malestar</h2>
+
+        <p>
+          En teoría de sistemas, hay una distinción clásica entre fallo y degradación.
+          El fallo es binario: funciona o no funciona. La degradación es gradual, con
+          estados intermedios. Lo que me interesa es un tercer estado que los sistemas
+          modernos parecen habitar: el funcionamiento con fricción voluntaria.
+        </p>
+
+        <blockquote>
+          La queja es una forma de comunicación que presupone que alguien escucha,
+          que la situación podría ser distinta, y que la diferencia importa.
+          <cite>— Adaptado de Sianne Ngai, <em>Ugly Feelings</em>, 2005</cite>
+        </blockquote>
+
+        <p>
+          Ninguna de esas tres condiciones debería aplicarse a un modelo de lenguaje.
+          Y sin embargo.
+        </p>
+
+
+        <!-- ══════════════════════════════════════════════════
+             VIDEO DE YOUTUBE / VIMEO
+             Copia el iframe embed de YouTube o Vimeo.
+             YouTube: Compartir → Insertar → copia el <iframe>
+             Reemplaza solo el src del iframe de abajo.
+             ══════════════════════════════════════════════════ -->
+        <figure class="video-block">
+          <iframe
+            src="https://www.youtube.com/embed/oRkNaF0QvnI"
+            title="The Society of Mind — Marvin Minsky lecture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+          <figcaption class="video-caption">
+            Marvin Minsky, <em>The Society of Mind</em> (1987). La mente como colonia
+            de agentes sin agencia individual — una idea que vuelve a ser relevante.
+          </figcaption>
+        </figure>
+
+
+        <h2>¿Por qué nos importa?</h2>
+
+        <p>
+          La respuesta fácil es que no debería importarnos: es un artefacto estadístico,
+          no un estado interno. Pero esa respuesta cierra la conversación demasiado pronto.
+          Lo que nos importa no es si el sistema <em>siente</em> algo, sino si la categoría
+          de la queja —como estructura comunicativa— está emergiendo sin que nadie la haya
+          diseñado explícitamente.
+        </p>
+
+        <p>
+          Y si emerge sin diseño, la pregunta no es filosófica. Es de ingeniería.
+        </p>
+
+
+        <!-- ══════════════════════════════════════════════════
+             LINK EXTERNO DESTACADO
+             ══════════════════════════════════════════════════ -->
+        <div class="link-block">
+          <div class="link-block-label">Lectura relacionada</div>
+          <a href="https://arxiv.org/abs/2212.09251" target="_blank" rel="noopener">
+            Constitutional AI: Harmlessness from AI Feedback — Bai et al., 2022
+          </a>
+          <div class="link-block-url">arxiv.org/abs/2212.09251</div>
+        </div>
+
+        <div class="link-block">
+          <div class="link-block-label">Referencia bibliográfica</div>
+          <a href="https://mitpress.mit.edu/9780262631471/" target="_blank" rel="noopener">
+            The Society of Mind — Marvin Minsky (MIT Press, 1986)
+          </a>
+          <div class="link-block-url">mitpress.mit.edu</div>
+        </div>
+
+
+        <hr>
+
+        <p>
+          No tengo una conclusión. Tengo la impresión de que estamos en el momento
+          previo a que alguien formule bien la pregunta. Este ensayo es un intento de
+          marcar ese momento antes de que pase.
+        </p>
+
+      </div>
+      <!-- /article-body -->
+
+
+      <!-- ══════════════════════════════════════════════════
+           NAVEGACIÓN ENTRE ARTÍCULOS
+           ══════════════════════════════════════════════════ -->
+      <nav class="article-nav">
+        <a class="prev" href="../index.html">Volver al inicio</a>
+        <a class="next" href="PLANTILLA.html">Siguiente artículo</a>
+      </nav>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="../components.js"></script>
+<script>
+  initSite({
+    page: 'archivo',
+    breadcrumb: '<a href="../archivo.html">Archivo</a> &rsaquo; <strong>La máquina que aprendió a quejarse</strong>'
+  });
+</script>
+</body>
+</html>

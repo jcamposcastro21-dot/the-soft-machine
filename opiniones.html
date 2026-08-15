@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opiniones — The Soft Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="page-wrap">
+  <div class="main-layout">
+    <main class="content-area">
+
+      <div class="section-header">
+        Opiniones <span>Textos cortos — más recientes primero</span>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════
+           Copia filas de aquí solo para artículos con tag "opinion"
+           ══════════════════════════════════════════════════ -->
+      <table class="article-table">
+        <thead>
+          <tr>
+            <th style="width:55%">Título</th>
+            <th style="width:12%">Tipo</th>
+            <th style="width:13%">Fecha</th>
+            <th style="width:10%">Lecturas</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td colspan="4" style="text-align:center; color:#888; padding:24px 0;">
+              Todavía no hay opiniones publicadas.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </main>
+
+    <aside class="sidebar" id="site-sidebar"></aside>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script>
+  initSite({ page: 'opiniones' });
+</script>
+</body>
+</html>
