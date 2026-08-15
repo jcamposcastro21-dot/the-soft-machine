@@ -7,8 +7,7 @@
   <language>es</language>
   <lastBuildDate>Sat, 15 Aug 2026 00:00:00 GMT</lastBuildDate>
 
-  <!-- ══════════════════════════════════════════════════
-       Añade un   <item>
+  <item>
     <title>Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia</title>
     <link>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html</link>
     <guid>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html</guid>
@@ -17,9 +16,6 @@
     <category>ensayo</category>
   </item>
 
-<item> nuevo (arriba de los demás) por
-       cada artículo que publiques.
-       ══════════════════════════════════════════════════ -->
   <item>
     <title>La máquina que aprendió a quejarse</title>
     <link>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html</link>

@@ -7,8 +7,7 @@
   <updated>2026-08-15T00:00:00Z</updated>
   <subtitle>Archivo personal de escritura. Sin algoritmo. Sin newsletter.</subtitle>
 
-  <!-- ══════════════════════════════════════════════════
-       Añade una   <entry>
+  <entry>
     <title>Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia</title>
     <link href="https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html"/>
     <id>https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html</id>
@@ -17,9 +16,6 @@
     <category term="ensayo"/>
   </entry>
 
-<entry> nueva (arriba de las demás) por
-       cada artículo que publiques.
-       ══════════════════════════════════════════════════ -->
   <entry>
     <title>La máquina que aprendió a quejarse</title>
     <link href="https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/ejemplo.html"/>

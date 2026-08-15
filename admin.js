@@ -386,7 +386,7 @@ function insertRssItem(xml, { title, slug, excerpt, tagClass, dateISO }) {
   </item>
 
 `;
-  const idx = xml.indexOf('<item>');
+  const idx = xml.indexOf('<item>\n    <title>');
   if (idx === -1) throw new Error('No se encontró <item> en feed.xml.');
   xml = xml.slice(0, idx) + item + xml.slice(idx);
   xml = xml.replace(/<lastBuildDate>.*?<\/lastBuildDate>/, `<lastBuildDate>${toRssDate(dateISO)}</lastBuildDate>`);
@@ -406,7 +406,7 @@ function insertAtomEntry(xml, { title, slug, excerpt, tagClass, dateISO }) {
   </entry>
 
 `;
-  const idx = xml.indexOf('<entry>');
+  const idx = xml.indexOf('<entry>\n    <title>');
   if (idx === -1) throw new Error('No se encontró <entry> en atom.xml.');
   xml = xml.slice(0, idx) + entry + xml.slice(idx);
   xml = xml.replace(/<updated>.*?<\/updated>/, `<updated>${updated}</updated>`);
