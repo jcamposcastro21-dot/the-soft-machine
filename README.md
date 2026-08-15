@@ -33,6 +33,35 @@ El token nunca sale de tu navegador salvo hacia `api.github.com` — no pasa
 por ningún servidor intermedio. No compartas el link de `admin.html` con
 el token ya cargado, y no lo publiques en ningún lado.
 
+### Imágenes y contenido incrustado en el cuerpo
+
+En el campo "Imágenes para este artículo" subes los archivos, y luego los
+insertas donde quieras dentro del texto con atajos de una línea (cada uno
+en su propio bloque, separado por línea en blanco):
+
+| Atajo | Resultado |
+|---|---|
+| `[img: archivo.jpg \| pie de foto]` | Imagen que subiste, en ese punto del texto |
+| `[img-url: https://... \| pie de foto]` | Imagen externa por URL |
+| `[tweet: https://x.com/usuario/status/123]` | Post de X / Twitter incrustado |
+| `[youtube: URL o ID \| título]` | Video de YouTube |
+| `[vimeo: ID \| título]` | Video de Vimeo |
+| `[link: https://... \| Título \| Etiqueta]` | Link externo destacado |
+| `[quote: Texto \| Autor, Obra, año]` | Cita con fuente |
+
+También puedes pegar HTML crudo (`<h2>`, `<blockquote>`, etc.) directo en
+un bloque.
+
+### Otras páginas editables desde el panel
+
+- **Acerca de**: reemplaza el texto completo de la página (mismo formato
+  de párrafos/atajos). Usa "Ver contenido actual" antes de sobrescribir.
+- **Fotos**: sube una imagen + pie de foto, se agrega a la galería.
+- **Links**: agrega un link nuevo (URL, título, descripción, fecha) a la
+  página de curaduría.
+
+Cada acción es su propio commit independiente.
+
 ### Alternativa: pedírselo a Claude Code
 
 Si prefieres, puedes traer el `.docx` a una sesión de Claude Code en esta

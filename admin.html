@@ -10,16 +10,19 @@
   .admin-wrap { max-width: 760px; margin: 24px auto; padding: 0 16px 60px; }
   .admin-box { background: var(--crema); border: 1px solid var(--gris-borde); padding: 20px; margin-bottom: 20px; }
   .admin-box h2 { font-size: 15px; color: var(--azul); margin-bottom: 10px; border-bottom: 2px solid var(--azul-nav); padding-bottom: 6px; }
+  .admin-box h3 { font-size: 13px; color: var(--azul); margin: 18px 0 8px; }
   .admin-box ol, .admin-box ul { margin: 8px 0 8px 20px; }
   .admin-box code { background: var(--crema-alt); padding: 1px 4px; border: 1px solid var(--gris-borde); }
   .field { margin-bottom: 14px; }
   .field label { display: block; font-weight: bold; margin-bottom: 4px; }
   .field .hint { color: var(--texto-gris); font-size: 11px; margin-top: 3px; }
+  .field .hint code { font-size: 11px; }
   .field input[type=text], .field input[type=date], .field input[type=number],
-  .field input[type=password], .field select, .field textarea {
+  .field input[type=password], .field input[type=url], .field select, .field textarea {
     width: 100%; padding: 7px 8px; border: 1px solid var(--gris-borde);
     font-family: inherit; font-size: 13px; background: #fff;
   }
+  .field input[type=file] { width: 100%; padding: 6px 0; font-size: 12px; }
   .field textarea { resize: vertical; }
   .field.checkbox { display: flex; align-items: center; gap: 6px; }
   .field.checkbox label { margin: 0; font-weight: normal; }
@@ -42,6 +45,9 @@
   .status-ok { color: #0a6b0a; }
   .status-err { color: var(--rojo); font-weight: bold; }
   .result-link { display: inline-block; margin-top: 10px; font-weight: bold; }
+  .shorthand-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+  .shorthand-table td { border: 1px solid var(--gris-borde); padding: 5px 8px; vertical-align: top; }
+  .shorthand-table code { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -64,6 +70,19 @@
       <li>Click "Generate token" y cópialo (empieza con <code>ghp_...</code>). Solo se muestra una vez.</li>
       <li>Pégalo abajo. Si marcas "recordar", queda guardado solo en este navegador (nunca se envía a ningún lado excepto a GitHub).</li>
     </ol>
+  </div>
+
+  <div class="admin-box">
+    <h2>Token de GitHub</h2>
+    <div class="field">
+      <label for="f-token">Personal Access Token</label>
+      <input type="password" id="f-token" placeholder="ghp_...">
+    </div>
+    <div class="field checkbox">
+      <input type="checkbox" id="f-remember" checked>
+      <label for="f-remember">Recordar en este navegador</label>
+    </div>
+    <button class="secondary-btn" id="btn-test">Probar conexión</button>
   </div>
 
   <div class="admin-box">
@@ -104,37 +123,78 @@
     </div>
 
     <div class="field">
-      <label for="f-body">Cuerpo del artículo</label>
-      <textarea id="f-body" rows="14" placeholder="Escribe el artículo. Separa los párrafos con una línea en blanco."></textarea>
-      <div class="hint">Cada bloque separado por línea en blanco se convierte en un párrafo. También puedes pegar HTML directo (&lt;h2&gt;, &lt;blockquote&gt;, etc.) en un bloque si sabes lo que haces.</div>
+      <label for="f-images">Imágenes para este artículo (opcional)</label>
+      <input type="file" id="f-images" accept="image/*" multiple>
+      <div class="hint">Súbelas aquí y luego insértalas donde quieras dentro del cuerpo con <code>[img: nombre-del-archivo.jpg | pie de foto]</code> — usa el mismo nombre de archivo exacto.</div>
     </div>
 
-    <div class="row2">
-      <div class="field">
-        <label for="f-img">Imagen destacada — URL (opcional)</label>
-        <input type="text" id="f-img" placeholder="https://...">
-      </div>
-      <div class="field">
-        <label for="f-img-caption">Pie de foto (opcional)</label>
-        <input type="text" id="f-img-caption">
-      </div>
+    <div class="field">
+      <label for="f-body">Cuerpo del artículo</label>
+      <textarea id="f-body" rows="16" placeholder="Escribe el artículo. Separa los párrafos con una línea en blanco."></textarea>
+      <div class="hint">Cada bloque separado por línea en blanco es un párrafo normal, o uno de estos atajos:</div>
+      <table class="shorthand-table">
+        <tr><td><code>[img: archivo.jpg | pie de foto]</code></td><td>Imagen que subiste arriba</td></tr>
+        <tr><td><code>[img-url: https://... | pie de foto]</code></td><td>Imagen externa por URL</td></tr>
+        <tr><td><code>[tweet: https://x.com/usuario/status/123]</code></td><td>Post de X / Twitter incrustado</td></tr>
+        <tr><td><code>[youtube: URL o ID | título]</code></td><td>Video de YouTube</td></tr>
+        <tr><td><code>[vimeo: ID | título]</code></td><td>Video de Vimeo</td></tr>
+        <tr><td><code>[link: https://... | Título | Etiqueta]</code></td><td>Link externo destacado (etiqueta opcional)</td></tr>
+        <tr><td><code>[quote: Texto de la cita | Autor, Obra, año]</code></td><td>Cita con fuente (fuente opcional)</td></tr>
+      </table>
+      <div class="hint" style="margin-top:6px">También puedes pegar HTML directo (&lt;h2&gt;, &lt;blockquote&gt;, etc.) en un bloque si sabes lo que haces.</div>
     </div>
+
+    <button class="publish-btn" id="btn-publish">Publicar artículo</button>
   </div>
 
   <div class="admin-box">
-    <h2>Token de GitHub</h2>
+    <h2>Editar "Acerca de"</h2>
+    <button class="secondary-btn" id="btn-acerca-load" style="margin-left:0; margin-bottom:12px">Ver contenido actual</button>
     <div class="field">
-      <label for="f-token">Personal Access Token</label>
-      <input type="password" id="f-token" placeholder="ghp_...">
+      <label for="f-acerca-current">Contenido actual (solo lectura)</label>
+      <textarea id="f-acerca-current" rows="6" readonly placeholder="Click en 'Ver contenido actual' arriba."></textarea>
     </div>
-    <div class="field checkbox">
-      <input type="checkbox" id="f-remember" checked>
-      <label for="f-remember">Recordar en este navegador</label>
+    <div class="field">
+      <label for="f-acerca-new">Nuevo contenido (reemplaza todo lo de arriba)</label>
+      <textarea id="f-acerca-new" rows="10" placeholder="Escribe el nuevo texto de la página. Mismos párrafos y atajos que en un artículo."></textarea>
+      <div class="hint">Esto reemplaza por completo el texto de la página "Acerca de". Revisa el contenido actual antes de guardar.</div>
     </div>
-    <button class="secondary-btn" id="btn-test">Probar conexión</button>
+    <button class="publish-btn" id="btn-acerca-save">Actualizar Acerca de</button>
   </div>
 
-  <button class="publish-btn" id="btn-publish">Publicar artículo</button>
+  <div class="admin-box">
+    <h2>Agregar foto a la galería</h2>
+    <div class="field">
+      <label for="f-foto-file">Imagen</label>
+      <input type="file" id="f-foto-file" accept="image/*">
+    </div>
+    <div class="field">
+      <label for="f-foto-caption">Pie de foto</label>
+      <input type="text" id="f-foto-caption" placeholder="Ej: Providencia, 2009">
+    </div>
+    <button class="publish-btn" id="btn-foto-add">Agregar foto</button>
+  </div>
+
+  <div class="admin-box">
+    <h2>Agregar link</h2>
+    <div class="field">
+      <label for="f-link-url">URL</label>
+      <input type="url" id="f-link-url" placeholder="https://...">
+    </div>
+    <div class="field">
+      <label for="f-link-title">Título</label>
+      <input type="text" id="f-link-title">
+    </div>
+    <div class="field">
+      <label for="f-link-desc">Descripción (por qué vale la pena)</label>
+      <textarea id="f-link-desc" rows="2"></textarea>
+    </div>
+    <div class="field">
+      <label for="f-link-date">Fecha</label>
+      <input type="date" id="f-link-date">
+    </div>
+    <button class="publish-btn" id="btn-link-add">Agregar link</button>
+  </div>
 
   <div id="status-log"></div>
 
