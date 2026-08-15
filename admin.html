@@ -52,12 +52,16 @@
 
   <div class="admin-box">
     <h2>Cómo obtener tu token de GitHub (una sola vez)</h2>
+    <p class="hint" style="margin-bottom:8px">
+      Usa un token <strong>clásico</strong>, no uno "fine-grained": los fine-grained
+      no tienen acceso completo a la API que usa este panel para publicar (da error 403).
+    </p>
     <ol>
-      <li>Ve a <code>github.com/settings/personal-access-tokens/new</code> (mientras tengas sesión iniciada).</li>
-      <li>Nombre: cualquiera, ej. "the-soft-machine-admin".</li>
-      <li>Repository access: "Only select repositories" → elige <code>the-soft-machine</code>.</li>
-      <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>.</li>
-      <li>Genera el token y cópialo (empieza con <code>github_pat_...</code>). Solo se muestra una vez.</li>
+      <li>Ve a <code>github.com/settings/tokens/new</code> (mientras tengas sesión iniciada).</li>
+      <li>Note: cualquiera, ej. "the-soft-machine-admin".</li>
+      <li>Expiration: la que prefieras (ej. 90 días).</li>
+      <li>Scopes: marca <strong>public_repo</strong> (alcanza porque el repo es público).</li>
+      <li>Click "Generate token" y cópialo (empieza con <code>ghp_...</code>). Solo se muestra una vez.</li>
       <li>Pégalo abajo. Si marcas "recordar", queda guardado solo en este navegador (nunca se envía a ningún lado excepto a GitHub).</li>
     </ol>
   </div>
@@ -121,7 +125,7 @@
     <h2>Token de GitHub</h2>
     <div class="field">
       <label for="f-token">Personal Access Token</label>
-      <input type="password" id="f-token" placeholder="github_pat_...">
+      <input type="password" id="f-token" placeholder="ghp_...">
     </div>
     <div class="field checkbox">
       <input type="checkbox" id="f-remember" checked>

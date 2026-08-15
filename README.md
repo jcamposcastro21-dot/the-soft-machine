@@ -15,8 +15,9 @@ directo al repo de GitHub, sin pasar por mí ni por una terminal:
 
 1. Ve a `https://jcamposcastro21-dot.github.io/the-soft-machine/admin.html`
 2. La primera vez, sigue las instrucciones de esa misma página para generar
-   un **Personal Access Token** de GitHub (solo se hace una vez; queda
-   guardado en tu navegador si marcas "recordar").
+   un **Personal Access Token clásico** de GitHub, scope `public_repo`
+   (los tokens "fine-grained" no funcionan con este panel — dan error 403).
+   Solo se hace una vez; queda guardado en tu navegador si marcas "recordar".
 3. Abre tu `.docx`, copia el texto del artículo y pégalo en el formulario
    (título, tipo, fecha, extracto, cuerpo). Separa los párrafos con una
    línea en blanco.
