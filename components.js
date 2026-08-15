@@ -26,8 +26,10 @@ const NAV_ITEMS = [
 ];
 
 /* ── Detecta cuántos niveles hay que subir para llegar a la raíz ──
-   Funciona tanto sirviendo el sitio desde un servidor (http)
-   como abriendo los archivos directamente (file://).            */
+   Funciona sirviendo el sitio desde la raíz de un dominio propio,
+   desde un subdirectorio de proyecto (ej. GitHub Pages:
+   usuario.github.io/the-soft-machine/), o abriendo los archivos
+   directamente (file://).                                       */
 function rootDepth() {
   let path = location.pathname;
   // normaliza separadores y quita el nombre del archivo si lo hay
@@ -37,12 +39,14 @@ function rootDepth() {
   const hasFile = last.includes('.html') || last.includes('.htm');
   const dirParts = hasFile ? parts.slice(0, -1) : parts;
 
-  if (location.protocol === 'file:') {
-    // busca la carpeta "the-soft-machine" en la ruta y cuenta desde ahí
-    const idx = dirParts.lastIndexOf('the-soft-machine');
-    if (idx === -1) return 0;
-    return dirParts.length - idx - 1;
-  }
+  // Si el sitio cuelga bajo una carpeta "the-soft-machine" (subdirectorio
+  // de proyecto o archivo local), cuenta la profundidad desde ahí.
+  const idx = dirParts.lastIndexOf('the-soft-machine');
+  if (idx !== -1) return dirParts.length - idx - 1;
+
+  if (location.protocol === 'file:') return 0;
+
+  // Dominio propio servido desde la raíz (ej. thesoftmachine.net/...)
   return dirParts.length;
 }
 
