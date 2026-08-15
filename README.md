@@ -8,28 +8,40 @@ Sitio en vivo: https://jcamposcastro21-dot.github.io/the-soft-machine/
 
 ---
 
-## Cómo subir un artículo que ya escribiste (desde un .docx)
+## Cómo subir un artículo tú mismo — panel de publicación
 
-Este es el flujo pensado para cuando tengas tus artículos en Word en otro
-computador:
+`/admin.html` es un panel que corre en tu navegador y publica artículos
+directo al repo de GitHub, sin pasar por mí ni por una terminal:
 
-1. Copia el `.docx` del artículo a la carpeta `articulos/` de este repo
-   (o a cualquier carpeta local, y avísame la ruta).
-2. Abre Claude Code en la carpeta del proyecto y pide algo como:
-   > "Convierte `articulos/mi-articulo.docx` en un artículo del sitio y publícalo"
-3. Claude:
-   - Lee el `.docx` y arma el HTML del artículo a partir de
-     `articulos/PLANTILLA.html` (título, fecha, tipo, párrafos, imágenes si
-     las incluías).
-   - Añade la fila correspondiente en `index.html`, `archivo.html` y en
+1. Ve a `https://jcamposcastro21-dot.github.io/the-soft-machine/admin.html`
+2. La primera vez, sigue las instrucciones de esa misma página para generar
+   un **Personal Access Token** de GitHub (solo se hace una vez; queda
+   guardado en tu navegador si marcas "recordar").
+3. Abre tu `.docx`, copia el texto del artículo y pégalo en el formulario
+   (título, tipo, fecha, extracto, cuerpo). Separa los párrafos con una
+   línea en blanco.
+4. Click en **Publicar artículo**. El panel:
+   - Crea el HTML del artículo en `articulos/`.
+   - Añade la fila en `index.html`, `archivo.html` y en
      `ensayos.html`/`opiniones.html` según el tipo.
-   - Añade la entrada nueva en `feed.xml`, `atom.xml` y `feed.json`.
-   - Hace `git commit` y (si confirmas) `git push` — GitHub Pages
-     republica el sitio solo, en 1–2 minutos.
-4. Borra o archiva el `.docx` una vez publicado (no se sube al sitio, solo
-   se usa como fuente).
+   - Actualiza `feed.xml`, `atom.xml`, `feed.json` y el sidebar "Recientes".
+   - Hace un solo commit directo a `main` vía la API de GitHub.
+5. GitHub Pages reconstruye el sitio en 1–2 minutos.
 
-Si prefieres hacerlo a mano en vez de pedírselo a Claude, sigue la sección
+El token nunca sale de tu navegador salvo hacia `api.github.com` — no pasa
+por ningún servidor intermedio. No compartas el link de `admin.html` con
+el token ya cargado, y no lo publiques en ningún lado.
+
+### Alternativa: pedírselo a Claude Code
+
+Si prefieres, puedes traer el `.docx` a una sesión de Claude Code en esta
+carpeta y pedir:
+> "Convierte `articulos/mi-articulo.docx` en un artículo del sitio y publícalo"
+
+Claude hace el mismo trabajo que el panel (leer el docx, armar el HTML,
+actualizar índices y feeds) y hace `git commit` + `git push` si confirmas.
+
+Si prefieres hacerlo completamente a mano, sigue la sección
 "Cómo publicar un artículo nuevo" más abajo.
 
 ---

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Publicar artículo — The Soft Machine</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .admin-wrap { max-width: 760px; margin: 24px auto; padding: 0 16px 60px; }
+  .admin-box { background: var(--crema); border: 1px solid var(--gris-borde); padding: 20px; margin-bottom: 20px; }
+  .admin-box h2 { font-size: 15px; color: var(--azul); margin-bottom: 10px; border-bottom: 2px solid var(--azul-nav); padding-bottom: 6px; }
+  .admin-box ol, .admin-box ul { margin: 8px 0 8px 20px; }
+  .admin-box code { background: var(--crema-alt); padding: 1px 4px; border: 1px solid var(--gris-borde); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-weight: bold; margin-bottom: 4px; }
+  .field .hint { color: var(--texto-gris); font-size: 11px; margin-top: 3px; }
+  .field input[type=text], .field input[type=date], .field input[type=number],
+  .field input[type=password], .field select, .field textarea {
+    width: 100%; padding: 7px 8px; border: 1px solid var(--gris-borde);
+    font-family: inherit; font-size: 13px; background: #fff;
+  }
+  .field textarea { resize: vertical; }
+  .field.checkbox { display: flex; align-items: center; gap: 6px; }
+  .field.checkbox label { margin: 0; font-weight: normal; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  button.publish-btn {
+    background: var(--azul); color: #fff; border: none; padding: 10px 18px;
+    font-family: inherit; font-size: 13px; font-weight: bold; cursor: pointer;
+  }
+  button.publish-btn:hover { background: var(--azul-nav); }
+  button.publish-btn:disabled { background: var(--gris-borde); cursor: not-allowed; }
+  button.secondary-btn {
+    background: none; border: 1px solid var(--azul); color: var(--azul);
+    padding: 8px 14px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: 8px;
+  }
+  #status-log {
+    margin-top: 16px; padding: 10px 12px; background: #fff; border: 1px solid var(--gris-borde);
+    font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; display: none; max-height: 260px; overflow-y: auto;
+  }
+  #status-log.visible { display: block; }
+  .status-ok { color: #0a6b0a; }
+  .status-err { color: var(--rojo); font-weight: bold; }
+  .result-link { display: inline-block; margin-top: 10px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="admin-wrap">
+
+  <div class="admin-box">
+    <h2>Cómo obtener tu token de GitHub (una sola vez)</h2>
+    <ol>
+      <li>Ve a <code>github.com/settings/personal-access-tokens/new</code> (mientras tengas sesión iniciada).</li>
+      <li>Nombre: cualquiera, ej. "the-soft-machine-admin".</li>
+      <li>Repository access: "Only select repositories" → elige <code>the-soft-machine</code>.</li>
+      <li>Permissions → Repository permissions → <strong>Contents: Read and write</strong>.</li>
+      <li>Genera el token y cópialo (empieza con <code>github_pat_...</code>). Solo se muestra una vez.</li>
+      <li>Pégalo abajo. Si marcas "recordar", queda guardado solo en este navegador (nunca se envía a ningún lado excepto a GitHub).</li>
+    </ol>
+  </div>
+
+  <div class="admin-box">
+    <h2>Nuevo artículo</h2>
+
+    <div class="field">
+      <label for="f-title">Título</label>
+      <input type="text" id="f-title" placeholder="Título del artículo">
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="f-tag">Tipo</label>
+        <select id="f-tag">
+          <option value="ensayo">ensayo</option>
+          <option value="opinion">opinión</option>
+          <option value="misc">miscelánea</option>
+          <option value="foto">foto</option>
+          <option value="video">video</option>
+          <option value="links">links</option>
+        </select>
+        <div class="hint">Solo "ensayo" y "opinión" aparecen además en sus páginas dedicadas.</div>
+      </div>
+      <div class="field">
+        <label for="f-date">Fecha</label>
+        <input type="date" id="f-date">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f-readtime">Tiempo de lectura (minutos)</label>
+      <input type="number" id="f-readtime" min="1" value="5" style="width:100px">
+    </div>
+
+    <div class="field">
+      <label for="f-excerpt">Extracto (aparece en las listas de artículos)</label>
+      <textarea id="f-excerpt" rows="2" placeholder="Una o dos frases que resuman el artículo."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="f-body">Cuerpo del artículo</label>
+      <textarea id="f-body" rows="14" placeholder="Escribe el artículo. Separa los párrafos con una línea en blanco."></textarea>
+      <div class="hint">Cada bloque separado por línea en blanco se convierte en un párrafo. También puedes pegar HTML directo (&lt;h2&gt;, &lt;blockquote&gt;, etc.) en un bloque si sabes lo que haces.</div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="f-img">Imagen destacada — URL (opcional)</label>
+        <input type="text" id="f-img" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label for="f-img-caption">Pie de foto (opcional)</label>
+        <input type="text" id="f-img-caption">
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-box">
+    <h2>Token de GitHub</h2>
+    <div class="field">
+      <label for="f-token">Personal Access Token</label>
+      <input type="password" id="f-token" placeholder="github_pat_...">
+    </div>
+    <div class="field checkbox">
+      <input type="checkbox" id="f-remember" checked>
+      <label for="f-remember">Recordar en este navegador</label>
+    </div>
+    <button class="secondary-btn" id="btn-test">Probar conexión</button>
+  </div>
+
+  <button class="publish-btn" id="btn-publish">Publicar artículo</button>
+
+  <div id="status-log"></div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="components.js"></script>
+<script src="admin.js"></script>
+<script>
+  initSite({ page: 'acerca', breadcrumb: '<strong>Publicar artículo</strong>' });
+</script>
+</body>
+</html>
