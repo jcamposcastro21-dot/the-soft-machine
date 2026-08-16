@@ -1,8 +1,16 @@
 /* ============================================================
-   THE SOFT MACHINE — Panel de publicación
-   Publica artículos y edita páginas directo al repo de GitHub
-   usando la API, desde el navegador, sin backend propio. El
-   token nunca sale de tu navegador salvo hacia api.github.com.
+   THE SOFT MACHINE — Panel de publicación / webmaster
+   Publica, edita y elimina escritos; gestiona etiquetas y otras
+   páginas, todo directo al repo de GitHub vía su API, desde el
+   navegador, sin backend propio. El token nunca sale de tu
+   navegador salvo hacia api.github.com.
+
+   Fuente de verdad de los escritos: data/articulos.json.
+   Cada artículo publicado guarda además su texto fuente original
+   (el que escribiste en el formulario, con atajos sin expandir)
+   en un comentario <!-- ADMIN:SOURCE:BASE64 ... --> dentro de su
+   HTML, para poder recargarlo en el formulario al editarlo sin
+   perder los atajos ([img:], [tweet:], etc.).
    ============================================================ */
 
 const OWNER  = 'jcamposcastro21-dot';
@@ -12,20 +20,20 @@ const GH_API = 'https://api.github.com';
 
 const TOKEN_KEY = 'tsm_admin_token';
 
-const TAG_LABELS = {
-  ensayo:  'ensayo',
-  opinion: 'opinión',
-  misc:    'miscelánea',
-  foto:    'foto',
-  video:   'video',
-  links:   'links',
+const CATEGORY_LABELS = {
+  ensayo:   'ensayo',
+  articulo: 'artículo',
+  opinion:  'opinión',
+  cuento:   'cuento',
+  misc:     'miscelánea',
 };
 
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                'agosto','septiembre','octubre','noviembre','diciembre'];
-const MESES_CORTOS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 
 const TWITTER_WIDGET_TAG = '<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
+const SOURCE_START = '<!-- ADMIN:SOURCE:BASE64 ';
+const SOURCE_END   = ' -->';
 
 /* ── Utilidades de texto ─────────────────────────────────── */
 
@@ -58,14 +66,17 @@ function sanitizeFilename(name) {
   return (base || 'archivo') + ext;
 }
 
+function parseTags(text) {
+  return String(text || '')
+    .split(',')
+    .map(t => t.trim())
+    .filter(Boolean)
+    .filter((t, i, arr) => arr.indexOf(t) === i);
+}
+
 function formatDateEs(iso) {
   const [y, m, d] = iso.split('-').map(Number);
   return `${d} de ${MESES[m - 1]} de ${y}`;
-}
-
-function formatShortEs(iso) {
-  const [y, m, d] = iso.split('-').map(Number);
-  return `${String(d).padStart(2, '0')} ${MESES_CORTOS[m - 1]}`;
 }
 
 function toRssDate(iso) {
@@ -249,8 +260,9 @@ function setBinary(changes, path, base64) {
   changes[path] = { content: base64, isBase64: true };
 }
 
-async function commitFiles(token, changes, message, log) {
-  log(`Creando ${Object.keys(changes).length} archivo(s)...`);
+async function commitFiles(token, changes, deletePaths, message, log) {
+  const entries = Object.keys(changes).length + (deletePaths ? deletePaths.length : 0);
+  log(`Preparando ${entries} cambio(s)...`);
   const blobs = [];
   for (const [path, entry] of Object.entries(changes)) {
     const content = entry.isBase64 ? entry.content : utf8ToBase64(entry.content);
@@ -258,6 +270,9 @@ async function commitFiles(token, changes, message, log) {
       content, encoding: 'base64',
     });
     blobs.push({ path, sha: blob.sha, mode: '100644', type: 'blob' });
+  }
+  for (const path of (deletePaths || [])) {
+    blobs.push({ path, sha: null, mode: '100644', type: 'blob' });
   }
 
   log('Preparando commit...');
@@ -287,9 +302,30 @@ function withTwitterWidget(html, needsTwitterWidget) {
   return html.replace('</body>', `${TWITTER_WIDGET_TAG}\n</body>`);
 }
 
-/* ── Constructores de contenido: artículos ───────────────── */
+/* ── data/articulos.json: fuente de verdad de los escritos ── */
 
-function buildArticleHtml({ title, tagClass, tagLabel, dateDisplay, readTime, bodyHtml, needsTwitterWidget }) {
+async function loadArticulosJson(token) {
+  const text = await getFileContent('data/articulos.json', token);
+  const data = JSON.parse(text);
+  if (!Array.isArray(data.articulos)) data.articulos = [];
+  return data;
+}
+
+function saveArticulosJsonInto(changes, data) {
+  setText(changes, 'data/articulos.json', JSON.stringify(data, null, 2) + '\n');
+}
+
+/* ── Artículo: HTML + extracción de la fuente original ───── */
+
+function buildArticleHtml({ title, tagClass, tagLabel, dateDisplay, readTime, author, tags, bodyHtml, needsTwitterWidget, sourceText }) {
+  const authorHtml = author ? `\n          <span>Por ${escapeHtml(author)}</span>` : '';
+  const tagsHtml = (tags && tags.length)
+    ? `\n        <div class="art-tags">${tags.map(t =>
+        `<a class="tag-chip" href="../tag.html?t=${encodeURIComponent(t)}">${escapeHtml(t)}</a>`
+      ).join('')}</div>`
+    : '';
+  const sourceComment = `${SOURCE_START}${utf8ToBase64(sourceText)}${SOURCE_END}`;
+
   const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -313,10 +349,11 @@ function buildArticleHtml({ title, tagClass, tagLabel, dateDisplay, readTime, bo
         <h1 class="article-title">${escapeHtml(title)}</h1>
         <div class="article-meta">
           <span>${dateDisplay}</span>
-          <span>Lectura: ~${escapeHtml(String(readTime))} minutos</span>
-        </div>
+          <span>Lectura: ~${escapeHtml(String(readTime))} minutos</span>${authorHtml}
+        </div>${tagsHtml}
       </div>
 
+      ${sourceComment}
       <div class="article-body">
 
 ${bodyHtml}
@@ -349,26 +386,69 @@ ${bodyHtml}
   return withTwitterWidget(html, needsTwitterWidget);
 }
 
-function buildRow({ title, slug, excerpt, tagClass, tagLabel, dateISO }) {
-  return `          <tr>
-            <td>
-              <a class="art-title" href="articulos/${slug}.html">${escapeHtml(title)}</a>
-              <div class="art-excerpt">${escapeHtml(excerpt)}</div>
-            </td>
-            <td><span class="tag ${tagClass}">${escapeHtml(tagLabel)}</span></td>
-            <td class="art-date">${dateISO}</td>
-            <td class="art-reads">—</td>
-          </tr>`;
+function extractSourceFromHtml(html) {
+  const idx = html.indexOf(SOURCE_START);
+  if (idx === -1) return null;
+  const end = html.indexOf(SOURCE_END, idx + SOURCE_START.length);
+  if (end === -1) return null;
+  try {
+    return base64ToUtf8(html.slice(idx + SOURCE_START.length, end));
+  } catch (e) {
+    return null;
+  }
 }
 
-function insertRowIntoTable(html, rowHtml) {
-  html = html.replace(/\s*<tr>\s*<td colspan="4"[\s\S]*?<\/td>\s*<\/tr>\s*\n?/i, '\n');
-  const marker = '<tbody>';
-  const idx = html.indexOf(marker);
-  if (idx === -1) throw new Error('No se encontró <tbody> en la tabla de artículos.');
-  const insertAt = idx + marker.length;
-  return html.slice(0, insertAt) + '\n\n' + rowHtml + '\n' + html.slice(insertAt);
+/* Para artículos publicados antes de que existiera ADMIN:SOURCE:
+   reconstruye un texto editable a partir del HTML ya renderizado.
+   Los párrafos <p> vuelven a texto plano; cualquier otro bloque
+   (figuras, citas, etc.) se conserva como HTML crudo, tal como
+   ya soporta el mini-lenguaje del cuerpo. */
+function extractBodyFallback(html) {
+  const startTag = '<div class="article-body">';
+  const s = html.indexOf(startTag);
+  if (s === -1) return '';
+
+  let depth = 1;
+  const re = /<div[\s>]|<\/div>/gi;
+  re.lastIndex = s + startTag.length;
+  let m, endIdx = html.length;
+  while ((m = re.exec(html))) {
+    if (m[0].toLowerCase() === '</div>') {
+      depth--;
+      if (depth === 0) { endIdx = m.index; break; }
+    } else {
+      depth++;
+    }
+  }
+
+  const inner = html.slice(s + startTag.length, endIdx);
+  const doc = new DOMParser().parseFromString('<div>' + inner + '</div>', 'text/html');
+  const container = doc.body.firstChild;
+  const blocks = [];
+  container.childNodes.forEach(node => {
+    if (node.nodeType === 3) {
+      const t = node.textContent.trim();
+      if (t) blocks.push(t);
+    } else if (node.nodeType === 1) {
+      if (node.tagName === 'P') {
+        const t = node.textContent.trim();
+        if (t) blocks.push(t);
+      } else {
+        blocks.push(node.outerHTML.trim());
+      }
+    }
+  });
+  return blocks.join('\n\n');
 }
+
+async function getArticleForEdit(token, slug) {
+  const html = await getFileContent(`articulos/${slug}.html`, token);
+  const fromSource = extractSourceFromHtml(html);
+  if (fromSource !== null) return { body: fromSource, usedFallback: false };
+  return { body: extractBodyFallback(html), usedFallback: true };
+}
+
+/* ── Feeds: insertar / quitar entradas ───────────────────── */
 
 function articleLink(slug) {
   return `https://${OWNER}.github.io/${REPO}/articulos/${slug}.html`;
@@ -386,11 +466,17 @@ function insertRssItem(xml, { title, slug, excerpt, tagClass, dateISO }) {
   </item>
 
 `;
-  const idx = xml.indexOf('<item>\n    <title>');
-  if (idx === -1) throw new Error('No se encontró <item> en feed.xml.');
+  let idx = xml.indexOf('<item>\n    <title>');
+  if (idx === -1) idx = xml.indexOf('</channel>'); // feed sin items todavía
+  if (idx === -1) throw new Error('No se encontró dónde insertar en feed.xml.');
   xml = xml.slice(0, idx) + item + xml.slice(idx);
   xml = xml.replace(/<lastBuildDate>.*?<\/lastBuildDate>/, `<lastBuildDate>${toRssDate(dateISO)}</lastBuildDate>`);
   return xml;
+}
+
+function removeRssItem(xml, slug) {
+  const re = new RegExp('\\s*<item>[\\s\\S]*?articulos/' + slug + '\\.html[\\s\\S]*?</item>\\s*\\n?');
+  return xml.replace(re, '\n');
 }
 
 function insertAtomEntry(xml, { title, slug, excerpt, tagClass, dateISO }) {
@@ -406,11 +492,17 @@ function insertAtomEntry(xml, { title, slug, excerpt, tagClass, dateISO }) {
   </entry>
 
 `;
-  const idx = xml.indexOf('<entry>\n    <title>');
-  if (idx === -1) throw new Error('No se encontró <entry> en atom.xml.');
+  let idx = xml.indexOf('<entry>\n    <title>');
+  if (idx === -1) idx = xml.indexOf('</feed>'); // feed sin entries todavía
+  if (idx === -1) throw new Error('No se encontró dónde insertar en atom.xml.');
   xml = xml.slice(0, idx) + entry + xml.slice(idx);
   xml = xml.replace(/<updated>.*?<\/updated>/, `<updated>${updated}</updated>`);
   return xml;
+}
+
+function removeAtomEntry(xml, slug) {
+  const re = new RegExp('\\s*<entry>[\\s\\S]*?articulos/' + slug + '\\.html[\\s\\S]*?</entry>\\s*\\n?');
+  return xml.replace(re, '\n');
 }
 
 function insertJsonItem(jsonText, { title, slug, excerpt, tagClass, dateISO }) {
@@ -426,30 +518,20 @@ function insertJsonItem(jsonText, { title, slug, excerpt, tagClass, dateISO }) {
   return JSON.stringify(feed, null, 2) + '\n';
 }
 
-function insertSidebarRecent(js, { title, slug, tagLabel, dateISO }) {
-  const marker = '<ul class="recent-list" id="sidebar-recents">';
-  const idxStart = js.indexOf(marker);
-  const idxEnd = js.indexOf('</ul>', idxStart);
-  if (idxStart === -1 || idxEnd === -1) throw new Error('No se encontró la lista de "Recientes" en components.js.');
-
-  const newLi = '<li><a href="${root}articulos/' + slug + '.html">' + escapeHtml(title) +
-    '</a><div class="recent-meta">' + formatShortEs(dateISO) + ' · ' + tagLabel + '</div></li>';
-
-  const existingBlock = js.slice(idxStart + marker.length, idxEnd);
-  const existingItems = existingBlock.match(/<li>[\s\S]*?<\/li>/g) || [];
-  const combined = [newLi, ...existingItems].slice(0, 4);
-
-  const newBlock = '\n      ' + combined.join('\n      ') + '\n    ';
-  return js.slice(0, idxStart + marker.length) + newBlock + js.slice(idxEnd);
+function removeJsonItem(jsonText, slug) {
+  const feed = JSON.parse(jsonText);
+  feed.items = (feed.items || []).filter(it => !(it.id || '').includes('/articulos/' + slug + '.html'));
+  return JSON.stringify(feed, null, 2) + '\n';
 }
 
-/* ── Acción: publicar artículo ────────────────────────────── */
+/* ── Acción: publicar / editar artículo ──────────────────── */
 
 async function publishArticle(token, form, log) {
-  const slug = slugify(form.title);
+  const isEdit = !!form.editingSlug;
+  const slug = isEdit ? form.editingSlug : slugify(form.title);
   const tagClass = form.tag;
-  const tagLabel = TAG_LABELS[tagClass];
-  log(`Slug generado: ${slug}`);
+  const tagLabel = CATEGORY_LABELS[tagClass];
+  log(isEdit ? `Editando: ${slug}` : `Slug generado: ${slug}`);
 
   const changes = {};
   const imageMap = {};
@@ -472,37 +554,104 @@ async function publishArticle(token, form, log) {
     tagLabel,
     dateDisplay: formatDateEs(form.date),
     readTime: form.readtime,
+    author: form.author,
+    tags: form.tags,
     bodyHtml,
     needsTwitterWidget,
+    sourceText: form.body,
   }));
 
-  const rowInfo = { title: form.title, slug, excerpt: form.excerpt, tagClass, tagLabel, dateISO: form.date };
-  const rowHtml = buildRow(rowInfo);
+  log('Actualizando data/articulos.json...');
+  const data = await loadArticulosJson(token);
+  const entry = {
+    slug,
+    title: form.title,
+    excerpt: form.excerpt,
+    category: tagClass,
+    tags: form.tags,
+    date: form.date,
+    readTime: Number(form.readtime) || 0,
+    published: true,
+  };
+  if (form.author) entry.author = form.author;
 
-  log('Leyendo index.html...');
-  setText(changes, 'index.html', insertRowIntoTable(await getFileContent('index.html', token), rowHtml));
+  const existingIdx = data.articulos.findIndex(a => a.slug === slug);
+  if (existingIdx !== -1) data.articulos[existingIdx] = entry;
+  else data.articulos.unshift(entry);
+  saveArticulosJsonInto(changes, data);
 
-  log('Leyendo archivo.html...');
-  setText(changes, 'archivo.html', insertRowIntoTable(await getFileContent('archivo.html', token), rowHtml));
+  const rowInfo = { title: form.title, slug, excerpt: form.excerpt, tagClass, dateISO: form.date };
 
-  if (tagClass === 'ensayo') {
-    log('Leyendo ensayos.html...');
-    setText(changes, 'ensayos.html', insertRowIntoTable(await getFileContent('ensayos.html', token), rowHtml));
-  } else if (tagClass === 'opinion') {
-    log('Leyendo opiniones.html...');
-    setText(changes, 'opiniones.html', insertRowIntoTable(await getFileContent('opiniones.html', token), rowHtml));
+  log('Actualizando feed.xml, atom.xml, feed.json...');
+  let rss = await getFileContent('feed.xml', token);
+  let atom = await getFileContent('atom.xml', token);
+  let jsonFeed = await getFileContent('feed.json', token);
+  if (isEdit) {
+    rss = removeRssItem(rss, slug);
+    atom = removeAtomEntry(atom, slug);
+    jsonFeed = removeJsonItem(jsonFeed, slug);
   }
+  setText(changes, 'feed.xml', insertRssItem(rss, rowInfo));
+  setText(changes, 'atom.xml', insertAtomEntry(atom, rowInfo));
+  setText(changes, 'feed.json', insertJsonItem(jsonFeed, rowInfo));
 
-  log('Leyendo feed.xml, atom.xml, feed.json...');
-  setText(changes, 'feed.xml', insertRssItem(await getFileContent('feed.xml', token), rowInfo));
-  setText(changes, 'atom.xml', insertAtomEntry(await getFileContent('atom.xml', token), rowInfo));
-  setText(changes, 'feed.json', insertJsonItem(await getFileContent('feed.json', token), rowInfo));
-
-  log('Leyendo components.js (sidebar "Recientes")...');
-  setText(changes, 'components.js', insertSidebarRecent(await getFileContent('components.js', token), rowInfo));
-
-  await commitFiles(token, changes, `Publicar: ${form.title}`, log);
+  await commitFiles(token, changes, [], isEdit ? `Editar escrito: ${form.title}` : `Publicar: ${form.title}`, log);
   return articleLink(slug);
+}
+
+/* ── Acción: eliminar escrito ─────────────────────────────── */
+
+async function deleteArticle(token, slug, log) {
+  log(`Eliminando: ${slug}`);
+  const changes = {};
+
+  log('Actualizando data/articulos.json...');
+  const data = await loadArticulosJson(token);
+  const before = data.articulos.length;
+  data.articulos = data.articulos.filter(a => a.slug !== slug);
+  if (data.articulos.length === before) throw new Error('Ese escrito no aparece en data/articulos.json.');
+  saveArticulosJsonInto(changes, data);
+
+  log('Actualizando feed.xml, atom.xml, feed.json...');
+  setText(changes, 'feed.xml', removeRssItem(await getFileContent('feed.xml', token), slug));
+  setText(changes, 'atom.xml', removeAtomEntry(await getFileContent('atom.xml', token), slug));
+  setText(changes, 'feed.json', removeJsonItem(await getFileContent('feed.json', token), slug));
+
+  await commitFiles(token, changes, [`articulos/${slug}.html`], `Eliminar escrito: ${slug}`, log);
+}
+
+/* ── Etiquetas: listar / renombrar / eliminar en bloque ──── */
+
+async function getTagCounts(token) {
+  const data = await loadArticulosJson(token);
+  const counts = {};
+  data.articulos.forEach(a => (a.tags || []).forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
+  return counts;
+}
+
+async function renameTagEverywhere(token, oldTag, newTag, log) {
+  log(`Actualizando etiqueta "${oldTag}"...`);
+  const data = await loadArticulosJson(token);
+  let changed = 0;
+  data.articulos.forEach(a => {
+    if (!Array.isArray(a.tags)) return;
+    const idx = a.tags.indexOf(oldTag);
+    if (idx === -1) return;
+    changed++;
+    if (newTag) {
+      if (a.tags.includes(newTag)) a.tags.splice(idx, 1);
+      else a.tags[idx] = newTag;
+    } else {
+      a.tags.splice(idx, 1);
+    }
+  });
+  if (!changed) throw new Error(`Ningún escrito usa la etiqueta "${oldTag}".`);
+
+  const changes = {};
+  saveArticulosJsonInto(changes, data);
+  await commitFiles(token, changes, [],
+    newTag ? `Renombrar etiqueta: ${oldTag} → ${newTag}` : `Eliminar etiqueta: ${oldTag}`, log);
+  return changed;
 }
 
 /* ── Acción: editar "Acerca de" ──────────────────────────── */
@@ -532,7 +681,7 @@ async function updateAcercaDe(token, bodyText, log) {
 
   const changes = {};
   setText(changes, 'acerca.html', newHtml);
-  await commitFiles(token, changes, 'Actualizar página Acerca de', log);
+  await commitFiles(token, changes, [], 'Actualizar página Acerca de', log);
 }
 
 /* ── Acción: agregar foto a la galería ───────────────────── */
@@ -556,14 +705,15 @@ async function addFoto(token, file, caption, log) {
   const insertAt = idx + marker.length;
   setText(changes, 'fotos.html', html.slice(0, insertAt) + figure + html.slice(insertAt));
 
-  await commitFiles(token, changes, `Agregar foto: ${caption || file.name}`, log);
+  await commitFiles(token, changes, [], `Agregar foto: ${caption || file.name}`, log);
 }
 
 /* ── Acción: agregar link ────────────────────────────────── */
 
 async function addLink(token, { url, title, desc, date }, log) {
   log('Leyendo links.html...');
-  const html = await getFileContent('links.html', token);
+  let html = await getFileContent('links.html', token);
+  html = html.replace(/\s*<li class="empty-state"[\s\S]*?<\/li>\s*\n?/, '\n\n');
   const marker = '<ul class="links-list">';
   const idx = html.indexOf(marker);
   if (idx === -1) throw new Error('No se encontró la lista en links.html.');
@@ -576,7 +726,7 @@ async function addLink(token, { url, title, desc, date }, log) {
 
   const changes = {};
   setText(changes, 'links.html', html.slice(0, insertAt) + li + html.slice(insertAt));
-  await commitFiles(token, changes, `Agregar link: ${title}`, log);
+  await commitFiles(token, changes, [], `Agregar link: ${title}`, log);
 }
 
 /* ── UI ───────────────────────────────────────────────────── */
@@ -648,13 +798,52 @@ document.addEventListener('DOMContentLoaded', () => {
     log('Conexión OK. El token tiene permiso de escritura sobre el repo.', 'status-ok');
   }));
 
-  /* — Publicar artículo — */
+  /* — Publicar / editar artículo — */
+  let editingSlug = null;
+
+  function setEditingState(slug, title) {
+    editingSlug = slug;
+    const btn = $('btn-publish');
+    const banner = $('editing-banner');
+    if (slug) {
+      btn.textContent = 'Guardar cambios';
+      banner.style.display = 'block';
+      banner.textContent = `Editando: ${title} (${slug}) — `;
+      const cancel = document.createElement('a');
+      cancel.href = '#';
+      cancel.textContent = 'cancelar edición';
+      cancel.addEventListener('click', (e) => { e.preventDefault(); clearForm(); });
+      banner.appendChild(cancel);
+    } else {
+      btn.textContent = 'Publicar artículo';
+      banner.style.display = 'none';
+      banner.textContent = '';
+    }
+  }
+
+  function clearForm() {
+    setEditingState(null, '');
+    $('f-title').value = '';
+    $('f-tag').value = 'ensayo';
+    $('f-date').value = today;
+    $('f-readtime').value = '5';
+    $('f-author').value = '';
+    $('f-tags').value = '';
+    $('f-excerpt').value = '';
+    $('f-body').value = '';
+    $('f-images').value = '';
+    clearLog();
+  }
+
   $('btn-publish').addEventListener('click', () => runAction($('btn-publish'), async (token) => {
     const form = {
+      editingSlug,
       title: $('f-title').value.trim(),
       tag: $('f-tag').value,
       date: $('f-date').value,
       readtime: $('f-readtime').value || '5',
+      author: $('f-author').value.trim(),
+      tags: parseTags($('f-tags').value),
       excerpt: $('f-excerpt').value.trim(),
       body: $('f-body').value.trim(),
       imageFiles: $('f-images').files,
@@ -664,8 +853,121 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const url = await publishArticle(token, form, log);
-    log('¡Publicado!', 'status-ok');
+    log(editingSlug ? '¡Cambios guardados!' : '¡Publicado!', 'status-ok');
     resultLink(url, 'GitHub Pages tarda 1-2 min en reconstruir. Ver artículo →');
+    clearForm();
+  }));
+
+  $('btn-cancel-edit').addEventListener('click', clearForm);
+
+  /* — Escritos publicados: listar / editar / eliminar — */
+  function escritoRow(a) {
+    const row = document.createElement('div');
+    row.className = 'escrito-row';
+    row.innerHTML = `
+      <div class="escrito-info">
+        <strong>${a.title.replace(/</g, '&lt;')}</strong>
+        <span class="escrito-meta">${CATEGORY_LABELS[a.category] || a.category} · ${a.date}${(a.tags && a.tags.length) ? ' · ' + a.tags.join(', ') : ''}</span>
+      </div>
+      <div class="escrito-actions">
+        <button class="secondary-btn btn-edit-escrito" type="button">Editar</button>
+        <button class="secondary-btn btn-delete-escrito" type="button">Eliminar</button>
+      </div>`;
+    row.querySelector('.btn-edit-escrito').addEventListener('click', () => runAction($('btn-escritos-load'), async (token) => {
+      log(`Cargando "${a.title}" para editar...`);
+      const { body, usedFallback } = await getArticleForEdit(token, a.slug);
+      $('f-title').value = a.title;
+      $('f-tag').value = a.category;
+      $('f-date').value = a.date;
+      $('f-readtime').value = a.readTime || 5;
+      $('f-author').value = a.author || '';
+      $('f-tags').value = (a.tags || []).join(', ');
+      $('f-excerpt').value = a.excerpt;
+      $('f-body').value = body;
+      setEditingState(a.slug, a.title);
+      log(usedFallback
+        ? 'Cargado. Este escrito no tenía código fuente guardado (se publicó antes de esta función), así que el cuerpo se reconstruyó desde el HTML — revísalo antes de guardar.'
+        : 'Cargado. Edita los campos arriba y presiona "Guardar cambios".', 'status-ok');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }));
+    row.querySelector('.btn-delete-escrito').addEventListener('click', () => {
+      if (!confirm(`¿Eliminar "${a.title}" permanentemente? Esta acción no se puede deshacer desde el panel.`)) return;
+      runAction($('btn-escritos-load'), async (token) => {
+        await deleteArticle(token, a.slug, log);
+        log('¡Eliminado!', 'status-ok');
+        loadEscritosList(token);
+      });
+    });
+    return row;
+  }
+
+  async function loadEscritosList(token) {
+    const container = $('escritos-list');
+    container.innerHTML = 'Cargando…';
+    const data = await loadArticulosJson(token);
+    const list = data.articulos.slice().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    container.innerHTML = '';
+    if (!list.length) {
+      container.textContent = 'Todavía no hay escritos publicados.';
+      return;
+    }
+    list.forEach(a => container.appendChild(escritoRow(a)));
+  }
+
+  $('btn-escritos-load').addEventListener('click', () => runAction($('btn-escritos-load'), async (token) => {
+    await loadEscritosList(token);
+    log(`Cargados. Usa "Editar" o "Eliminar" en la lista de arriba.`, 'status-ok');
+  }));
+
+  /* — Etiquetas: listar / renombrar / eliminar — */
+  function tagRow(tag, count) {
+    const row = document.createElement('div');
+    row.className = 'escrito-row';
+    row.innerHTML = `
+      <div class="escrito-info">
+        <strong>#${tag.replace(/</g, '&lt;')}</strong>
+        <span class="escrito-meta">${count} escrito(s)</span>
+      </div>
+      <div class="escrito-actions">
+        <button class="secondary-btn btn-rename-tag" type="button">Renombrar</button>
+        <button class="secondary-btn btn-delete-tag" type="button">Eliminar</button>
+      </div>`;
+    row.querySelector('.btn-rename-tag').addEventListener('click', () => {
+      const nuevo = prompt(`Nuevo nombre para la etiqueta "${tag}":`, tag);
+      if (nuevo === null || !nuevo.trim() || nuevo.trim() === tag) return;
+      runAction($('btn-tags-load'), async (token) => {
+        const n = await renameTagEverywhere(token, tag, nuevo.trim(), log);
+        log(`Etiqueta actualizada en ${n} escrito(s).`, 'status-ok');
+        loadTagsList(token);
+      });
+    });
+    row.querySelector('.btn-delete-tag').addEventListener('click', () => {
+      if (!confirm(`¿Eliminar la etiqueta "${tag}" de todos los escritos que la usan?`)) return;
+      runAction($('btn-tags-load'), async (token) => {
+        const n = await renameTagEverywhere(token, tag, null, log);
+        log(`Etiqueta quitada de ${n} escrito(s).`, 'status-ok');
+        loadTagsList(token);
+      });
+    });
+    return row;
+  }
+
+  async function loadTagsList(token) {
+    const container = $('tags-list');
+    container.innerHTML = 'Cargando…';
+    const counts = await getTagCounts(token);
+    const tags = Object.keys(counts).sort();
+    container.innerHTML = '';
+    if (!tags.length) {
+      container.textContent = 'Todavía no se ha usado ninguna etiqueta.';
+      return;
+    }
+    tags.forEach(t => container.appendChild(tagRow(t, counts[t])));
+  }
+
+  $('btn-tags-load').addEventListener('click', () => runAction($('btn-tags-load'), async (token) => {
+    await loadTagsList(token);
+    log('Etiquetas cargadas.', 'status-ok');
   }));
 
   /* — Acerca de — */

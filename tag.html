@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Opiniones — The Soft Machine</title>
+  <title>Etiqueta — The Soft Machine</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
     <main class="content-area">
 
       <div class="section-header">
-        Opiniones <span>Textos cortos — más recientes primero</span>
+        Etiqueta: <span id="tag-name">—</span> <span>Más recientes primero</span>
       </div>
 
       <table class="article-table">
@@ -43,8 +43,10 @@
 <script src="components.js"></script>
 <script src="listings.js"></script>
 <script>
-  initSite({ page: 'opiniones' });
-  renderListing('listing-body', a => a.category === 'opinion', 'Todavía no hay opiniones publicadas.');
+  const tsmTag = new URLSearchParams(location.search).get('t') || '';
+  document.getElementById('tag-name').textContent = tsmTag || '(sin especificar)';
+  initSite({ page: '', breadcrumb: 'Etiqueta &rsaquo; <strong>' + tsmTag.replace(/</g,'&lt;') + '</strong>' });
+  renderListing('listing-body', a => (a.tags || []).includes(tsmTag), 'Todavía no hay escritos con esta etiqueta.');
 </script>
 </body>
 </html>

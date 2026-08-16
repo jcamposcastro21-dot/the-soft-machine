@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Opiniones — The Soft Machine</title>
+  <title>Miscelánea — The Soft Machine</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
     <main class="content-area">
 
       <div class="section-header">
-        Opiniones <span>Textos cortos — más recientes primero</span>
+        Miscelánea <span>Más recientes primero</span>
       </div>
 
       <table class="article-table">
@@ -43,8 +43,8 @@
 <script src="components.js"></script>
 <script src="listings.js"></script>
 <script>
-  initSite({ page: 'opiniones' });
-  renderListing('listing-body', a => a.category === 'opinion', 'Todavía no hay opiniones publicadas.');
+  initSite({ page: 'miscelanea' });
+  renderListing('listing-body', a => a.category === 'misc', 'Todavía no hay entradas de miscelánea publicadas.');
 </script>
 </body>
 </html>

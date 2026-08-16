@@ -17,12 +17,9 @@
   <div class="main-layout">
     <main class="content-area">
 
-      <!-- ══════════════════════════════════════════════════
-           TABLA DE ARTÍCULOS
-           Para añadir un artículo: duplica una fila <tr>
-           y edita el título, href, tipo, fecha y lecturas.
-           Recuerda añadir la misma fila en archivo.html.
-           ══════════════════════════════════════════════════ -->
+      <!-- Esta tabla se llena en tiempo real desde data/articulos.json
+           (ver listings.js). No edites filas a mano aquí: publica o
+           edita escritos desde /admin.html. -->
       <div class="section-header">
         Entradas recientes <span>Ordenado por fecha — más reciente primero</span>
       </div>
@@ -35,41 +32,8 @@
             <th style="width:10%">Lecturas</th>
           </tr>
         </thead>
-        <tbody>
-
-          <tr>
-            <td>
-              <a class="art-title" href="articulos/grecia-syriza-y-el-patron-del-desencanto-ideologico.html">Grecia, SYRIZA y el patrón del desencanto ideológico</a>
-              <div class="art-excerpt">Lecciones de una izquierda en el poder.</div>
-            </td>
-            <td><span class="tag opinion">opinión</span></td>
-            <td class="art-date">2026-08-15</td>
-            <td class="art-reads">—</td>
-          </tr>
-
-
-          <tr>
-            <td>
-              <a class="art-title" href="articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html">Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia</a>
-              <div class="art-excerpt">Estas condiciones psicológicas están más interrelacionadas de lo que parece a simple vista; comprenderlas sin estigmatizarlas es crucial para proporcionar diagnósticos adecuados.</div>
-            </td>
-            <td><span class="tag ensayo">ensayo</span></td>
-            <td class="art-date">2026-08-15</td>
-            <td class="art-reads">—</td>
-          </tr>
-
-
-          <!-- ── Artículo 1 ── -->
-          <tr>
-            <td>
-              <a class="art-title" href="articulos/ejemplo.html">La máquina que aprendió a quejarse</a>
-              <div class="art-excerpt">Sobre el lenguaje del malestar en sistemas que no deberían tenerlo, y por qué nos importa de todas formas.</div>
-            </td>
-            <td><span class="tag ensayo">ensayo</span></td>
-            <td class="art-date">2025-06-12</td>
-            <td class="art-reads">—</td>
-          </tr>
-
+        <tbody id="listing-body">
+          <tr><td colspan="4" style="text-align:center; color:#888; padding:24px 0;">Cargando…</td></tr>
         </tbody>
       </table>
 
@@ -82,8 +46,10 @@
 <div id="site-footer"></div>
 
 <script src="components.js"></script>
+<script src="listings.js"></script>
 <script>
   initSite({ page: 'inicio' });
+  renderListing('listing-body', () => true, 'Todavía no hay escritos publicados.', 8);
 </script>
 </body>
 </html>

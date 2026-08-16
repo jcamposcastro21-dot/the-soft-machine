@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Publicar artículo — The Soft Machine</title>
+<title>Webmaster — The Soft Machine</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  .admin-wrap { max-width: 760px; margin: 24px auto; padding: 0 16px 60px; }
+  .admin-wrap { max-width: 780px; margin: 24px auto; padding: 0 16px 60px; }
   .admin-box { background: var(--crema); border: 1px solid var(--gris-borde); padding: 20px; margin-bottom: 20px; }
   .admin-box h2 { font-size: 15px; color: var(--azul); margin-bottom: 10px; border-bottom: 2px solid var(--azul-nav); padding-bottom: 6px; }
   .admin-box h3 { font-size: 13px; color: var(--azul); margin: 18px 0 8px; }
@@ -35,8 +35,9 @@
   button.publish-btn:disabled { background: var(--gris-borde); cursor: not-allowed; }
   button.secondary-btn {
     background: none; border: 1px solid var(--azul); color: var(--azul);
-    padding: 8px 14px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: 8px;
+    padding: 6px 12px; font-family: inherit; font-size: 12px; cursor: pointer; margin-left: 8px;
   }
+  button.secondary-btn:first-of-type { margin-left: 0; }
   #status-log {
     margin-top: 16px; padding: 10px 12px; background: #fff; border: 1px solid var(--gris-borde);
     font-family: Consolas, monospace; font-size: 12px; white-space: pre-wrap; display: none; max-height: 260px; overflow-y: auto;
@@ -48,6 +49,19 @@
   .shorthand-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
   .shorthand-table td { border: 1px solid var(--gris-borde); padding: 5px 8px; vertical-align: top; }
   .shorthand-table code { white-space: nowrap; }
+  #editing-banner {
+    display: none; background: #FFF3CD; border: 1px solid #E0C060; color: #6B5010;
+    padding: 8px 10px; margin-bottom: 14px; font-size: 12px;
+  }
+  .escrito-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 8px 0; border-bottom: 1px solid var(--gris-borde);
+  }
+  .escrito-row:last-child { border-bottom: none; }
+  .escrito-info { display: flex; flex-direction: column; gap: 2px; font-size: 12px; }
+  .escrito-meta { color: var(--texto-gris); font-size: 11px; }
+  .escrito-actions { white-space: nowrap; }
+  #escritos-list, #tags-list { font-size: 12px; }
 </style>
 </head>
 <body>
@@ -86,25 +100,25 @@
   </div>
 
   <div class="admin-box">
-    <h2>Nuevo artículo</h2>
+    <h2>Publicar / editar escrito</h2>
+
+    <div id="editing-banner"></div>
 
     <div class="field">
       <label for="f-title">Título</label>
-      <input type="text" id="f-title" placeholder="Título del artículo">
+      <input type="text" id="f-title" placeholder="Título del escrito">
     </div>
 
     <div class="row2">
       <div class="field">
-        <label for="f-tag">Tipo</label>
+        <label for="f-tag">Categoría</label>
         <select id="f-tag">
           <option value="ensayo">ensayo</option>
+          <option value="articulo">artículo</option>
           <option value="opinion">opinión</option>
+          <option value="cuento">cuento</option>
           <option value="misc">miscelánea</option>
-          <option value="foto">foto</option>
-          <option value="video">video</option>
-          <option value="links">links</option>
         </select>
-        <div class="hint">Solo "ensayo" y "opinión" aparecen además en sus páginas dedicadas.</div>
       </div>
       <div class="field">
         <label for="f-date">Fecha</label>
@@ -112,25 +126,36 @@
       </div>
     </div>
 
-    <div class="field">
-      <label for="f-readtime">Tiempo de lectura (minutos)</label>
-      <input type="number" id="f-readtime" min="1" value="5" style="width:100px">
+    <div class="row2">
+      <div class="field">
+        <label for="f-readtime">Tiempo de lectura (minutos)</label>
+        <input type="number" id="f-readtime" min="1" value="5">
+      </div>
+      <div class="field">
+        <label for="f-author">Autor (opcional)</label>
+        <input type="text" id="f-author" placeholder="Déjalo vacío si eres tú por defecto">
+      </div>
     </div>
 
     <div class="field">
-      <label for="f-excerpt">Extracto (aparece en las listas de artículos)</label>
-      <textarea id="f-excerpt" rows="2" placeholder="Una o dos frases que resuman el artículo."></textarea>
+      <label for="f-tags">Etiquetas (separadas por coma, opcional)</label>
+      <input type="text" id="f-tags" placeholder="ej: política, chile, historia">
     </div>
 
     <div class="field">
-      <label for="f-images">Imágenes para este artículo (opcional)</label>
+      <label for="f-excerpt">Extracto (aparece en las listas de escritos)</label>
+      <textarea id="f-excerpt" rows="2" placeholder="Una o dos frases que resuman el escrito."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="f-images">Imágenes para este escrito (opcional)</label>
       <input type="file" id="f-images" accept="image/*" multiple>
       <div class="hint">Súbelas aquí y luego insértalas donde quieras dentro del cuerpo con <code>[img: nombre-del-archivo.jpg | pie de foto]</code> — usa el mismo nombre de archivo exacto.</div>
     </div>
 
     <div class="field">
-      <label for="f-body">Cuerpo del artículo</label>
-      <textarea id="f-body" rows="16" placeholder="Escribe el artículo. Separa los párrafos con una línea en blanco."></textarea>
+      <label for="f-body">Cuerpo del escrito</label>
+      <textarea id="f-body" rows="16" placeholder="Escribe el texto. Separa los párrafos con una línea en blanco."></textarea>
       <div class="hint">Cada bloque separado por línea en blanco es un párrafo normal, o uno de estos atajos:</div>
       <table class="shorthand-table">
         <tr><td><code>[img: archivo.jpg | pie de foto]</code></td><td>Imagen que subiste arriba</td></tr>
@@ -145,6 +170,20 @@
     </div>
 
     <button class="publish-btn" id="btn-publish">Publicar artículo</button>
+    <button class="secondary-btn" id="btn-cancel-edit">Cancelar edición / limpiar formulario</button>
+  </div>
+
+  <div class="admin-box">
+    <h2>Escritos publicados</h2>
+    <button class="secondary-btn" id="btn-escritos-load" style="margin-left:0; margin-bottom:12px">Cargar lista</button>
+    <div id="escritos-list">Click en "Cargar lista" para ver los escritos publicados.</div>
+  </div>
+
+  <div class="admin-box">
+    <h2>Etiquetas</h2>
+    <button class="secondary-btn" id="btn-tags-load" style="margin-left:0; margin-bottom:12px">Cargar etiquetas</button>
+    <div id="tags-list">Click en "Cargar etiquetas" para administrarlas.</div>
+    <p class="hint" style="margin-top:10px">Para crear una etiqueta nueva, simplemente escríbela en el campo "Etiquetas" al publicar o editar un escrito.</p>
   </div>
 
   <div class="admin-box">
@@ -156,7 +195,7 @@
     </div>
     <div class="field">
       <label for="f-acerca-new">Nuevo contenido (reemplaza todo lo de arriba)</label>
-      <textarea id="f-acerca-new" rows="10" placeholder="Escribe el nuevo texto de la página. Mismos párrafos y atajos que en un artículo."></textarea>
+      <textarea id="f-acerca-new" rows="10" placeholder="Escribe el nuevo texto de la página. Mismos párrafos y atajos que en un escrito."></textarea>
       <div class="hint">Esto reemplaza por completo el texto de la página "Acerca de". Revisa el contenido actual antes de guardar.</div>
     </div>
     <button class="publish-btn" id="btn-acerca-save">Actualizar Acerca de</button>
@@ -170,7 +209,7 @@
     </div>
     <div class="field">
       <label for="f-foto-caption">Pie de foto</label>
-      <input type="text" id="f-foto-caption" placeholder="Ej: Providencia, 2009">
+      <input type="text" id="f-foto-caption" placeholder="Descripción o lugar y año">
     </div>
     <button class="publish-btn" id="btn-foto-add">Agregar foto</button>
   </div>
@@ -205,7 +244,7 @@
 <script src="components.js"></script>
 <script src="admin.js"></script>
 <script>
-  initSite({ page: 'acerca', breadcrumb: '<strong>Publicar artículo</strong>' });
+  initSite({ page: '', breadcrumb: '<strong>Webmaster</strong>' });
 </script>
 </body>
 </html>

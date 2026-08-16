@@ -9,20 +9,31 @@
    ============================================================ */
 
 const SITE_NAME     = "The Soft Machine";
-const SITE_SUBTITLE = "Artículos · Ensayos · Opiniones · Miscelánea";
+const SITE_SUBTITLE = "Ensayos · Artículos · Opiniones · Cuentos · Miscelánea";
 const SITE_TAGLINE  = "Archivo personal de escritura. Sin algoritmo. Sin newsletter.";
+
+const CATEGORY_PAGES = [
+  { category: 'ensayo',   label: 'Ensayos',    href: 'ensayos.html'    },
+  { category: 'articulo', label: 'Artículos',   href: 'articulos.html' },
+  { category: 'opinion',  label: 'Opiniones',   href: 'opiniones.html' },
+  { category: 'cuento',   label: 'Cuentos',     href: 'cuentos.html'   },
+  { category: 'misc',     label: 'Miscelánea',  href: 'miscelanea.html'},
+];
 
 /* Añade o quita items aquí: { label, href, id }
    El href es siempre relativo a la RAÍZ del sitio (empieza con /).
    El id debe coincidir con el "page" que le pasas a initSite(). */
 const NAV_ITEMS = [
-  { label: "Inicio",    href: "/index.html",     id: "inicio"    },
-  { label: "Archivo",   href: "/archivo.html",   id: "archivo"   },
-  { label: "Ensayos",   href: "/ensayos.html",   id: "ensayos"   },
-  { label: "Opiniones", href: "/opiniones.html", id: "opiniones" },
-  { label: "Fotos",     href: "/fotos.html",     id: "fotos"     },
-  { label: "Links",     href: "/links.html",     id: "links"     },
-  { label: "Acerca de", href: "/acerca.html",    id: "acerca"    },
+  { label: "Inicio",     href: "/index.html",      id: "inicio"     },
+  { label: "Archivo",    href: "/archivo.html",    id: "archivo"    },
+  { label: "Ensayos",    href: "/ensayos.html",    id: "ensayos"    },
+  { label: "Artículos",  href: "/articulos.html",  id: "articulos"  },
+  { label: "Opiniones",  href: "/opiniones.html",  id: "opiniones"  },
+  { label: "Cuentos",    href: "/cuentos.html",    id: "cuentos"    },
+  { label: "Miscelánea", href: "/miscelanea.html", id: "miscelanea" },
+  { label: "Fotos",      href: "/fotos.html",      id: "fotos"      },
+  { label: "Links",      href: "/links.html",      id: "links"      },
+  { label: "Acerca de",  href: "/acerca.html",     id: "acerca"     },
 ];
 
 /* ── Detecta cuántos niveles hay que subir para llegar a la raíz ──
@@ -75,22 +86,6 @@ function startClock() {
   setInterval(tick, 1000);
 }
 
-/* ── Contador de visitas (localStorage, solo estético) ──────
-   Sube +1 real por sesión de navegador, no por refresh.      */
-function updateCounter() {
-  const el = document.getElementById('visit-counter');
-  if (!el) return;
-  const KEY = 'tsm_visits';
-  const SESSION_KEY = 'tsm_session_counted';
-  let count = parseInt(localStorage.getItem(KEY) || '1', 10);
-  if (!sessionStorage.getItem(SESSION_KEY)) {
-    count += 1;
-    localStorage.setItem(KEY, String(count));
-    sessionStorage.setItem(SESSION_KEY, '1');
-  }
-  el.textContent = String(count).padStart(6, '0');
-}
-
 /* ── Inyecta el header ───────────────────────────────────── */
 function renderHeader(activePage, breadcrumbExtra) {
   const root = rootPath();
@@ -129,24 +124,22 @@ function renderHeader(activePage, breadcrumbExtra) {
 }
 
 /* ── Inyecta el sidebar ──────────────────────────────────── */
+function escapeHtmlSidebar(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function renderSidebar() {
   const root = rootPath();
   const html = `
 <div class="sidebar-module">
-  <div class="sidebar-module-header"><span class="icon">[i]</span> Visitas totales</div>
-  <div class="sidebar-module-body">
-    <div class="counter-box" id="visit-counter">000001</div>
-    <div class="counter-label">desde el lanzamiento</div>
-  </div>
-</div>
-<div class="sidebar-module">
   <div class="sidebar-module-header"><span class="icon">[+]</span> Categorías</div>
   <div class="sidebar-module-body">
-    <ul class="cat-list">
-      <li><a href="${root}ensayos.html">Ensayos</a><span class="cat-count">1</span></li>
-      <li><a href="${root}opiniones.html">Opiniones</a><span class="cat-count">0</span></li>
-      <li><a href="${root}fotos.html">Fotografía</a><span class="cat-count">0</span></li>
-      <li><a href="${root}links.html">Links</a><span class="cat-count">3</span></li>
+    <ul class="cat-list" id="sidebar-categories">
+      <li>Cargando…</li>
     </ul>
   </div>
 </div>
@@ -154,9 +147,7 @@ function renderSidebar() {
   <div class="sidebar-module-header"><span class="icon">[*]</span> Recientes</div>
   <div class="sidebar-module-body">
     <ul class="recent-list" id="sidebar-recents">
-      <li><a href="${root}articulos/grecia-syriza-y-el-patron-del-desencanto-ideologico.html">Grecia, SYRIZA y el patrón del desencanto ideológico</a><div class="recent-meta">15 ago · opinión</div></li>
-      <li><a href="${root}articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html">Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia</a><div class="recent-meta">15 ago · ensayo</div></li>
-      <li><a href="${root}articulos/ejemplo.html">La máquina que aprendió a quejarse</a><div class="recent-meta">12 jun · ensayo</div></li>
+      <li>Cargando…</li>
     </ul>
   </div>
 </div>
@@ -183,7 +174,44 @@ function renderSidebar() {
   const el = document.getElementById('site-sidebar');
   if (el) {
     el.innerHTML = html;
-    updateCounter();
+    loadSidebarDynamic(root);
+  }
+}
+
+/* Carga data/articulos.json y llena Categorías + Recientes con datos
+   reales. Si falla (ej. abriendo el sitio con file:// donde fetch()
+   de JSON local queda bloqueado por CORS), se muestra un aviso en
+   vez de números inventados. */
+async function loadSidebarDynamic(root) {
+  const catList = document.getElementById('sidebar-categories');
+  const recentList = document.getElementById('sidebar-recents');
+  try {
+    const res = await fetch(root + 'data/articulos.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const articulos = (data.articulos || []).filter(a => a.published !== false);
+
+    if (catList) {
+      catList.innerHTML = CATEGORY_PAGES.map(c => {
+        const count = articulos.filter(a => a.category === c.category).length;
+        return `<li><a href="${root}${c.href}">${c.label}</a><span class="cat-count">${count}</span></li>`;
+      }).join('');
+    }
+
+    if (recentList) {
+      const recent = articulos.slice().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)).slice(0, 4);
+      recentList.innerHTML = recent.length
+        ? recent.map(a => {
+            const d = new Date(a.date + 'T00:00:00Z');
+            const dias = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+            const corta = String(d.getUTCDate()).padStart(2,'0') + ' ' + dias[d.getUTCMonth()];
+            return `<li><a href="${root}articulos/${a.slug}.html">${escapeHtmlSidebar(a.title)}</a><div class="recent-meta">${corta} · ${escapeHtmlSidebar(a.category)}</div></li>`;
+          }).join('')
+        : '<li>Sin publicaciones todavía.</li>';
+    }
+  } catch (err) {
+    if (catList) catList.innerHTML = '<li>No disponible</li>';
+    if (recentList) recentList.innerHTML = '<li>No disponible</li>';
   }
 }
 

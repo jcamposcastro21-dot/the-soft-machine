@@ -277,6 +277,32 @@ button:focus-visible {
 .tag.video    { background: #5C1A1A; color: #F0A8A8; }
 .tag.links    { background: #1A4A5C; color: #A8D4F0; }
 .tag.misc     { background: #3A3A1A; color: #D4D4A8; }
+.tag.articulo { background: #1A5C5C; color: #9AE0E0; }
+.tag.cuento   { background: #5C4A1A; color: #F0D89A; }
+
+/* ── ETIQUETAS DE CONTENIDO (tags libres, no el tipo) ── */
+.art-tags {
+  margin-top: 4px;
+}
+.tag-chip {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  background: var(--crema-alt);
+  border: 1px solid var(--gris-borde);
+  color: var(--texto-gris);
+  padding: 1px 5px;
+  margin: 2px 3px 0 0;
+  white-space: nowrap;
+}
+.tag-chip:hover {
+  border-color: var(--rojo);
+  color: var(--rojo);
+  text-decoration: none;
+}
+.tag-chip::before {
+  content: "#";
+}
 
 /* ── VISTA DE ARTÍCULO ───────────────────────────── */
 .article-header {

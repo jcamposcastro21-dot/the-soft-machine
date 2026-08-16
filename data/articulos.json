@@ -1,0 +1,24 @@
+{
+  "articulos": [
+    {
+      "slug": "grecia-syriza-y-el-patron-del-desencanto-ideologico",
+      "title": "Grecia, SYRIZA y el patrón del desencanto ideológico",
+      "excerpt": "Lecciones de una izquierda en el poder.",
+      "category": "opinion",
+      "tags": [],
+      "date": "2026-08-15",
+      "readTime": 5,
+      "published": true
+    },
+    {
+      "slug": "mas-alla-de-la-coincidencia-vinculos-debates-y-controversias",
+      "title": "Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia",
+      "excerpt": "Estas condiciones psicológicas están más interrelacionadas de lo que parece a simple vista; comprenderlas sin estigmatizarlas es crucial para proporcionar diagnósticos adecuados.",
+      "category": "ensayo",
+      "tags": [],
+      "date": "2026-08-15",
+      "readTime": 15,
+      "published": true
+    }
+  ]
+}
