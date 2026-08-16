@@ -154,6 +154,7 @@ function renderSidebar() {
   <div class="sidebar-module-header"><span class="icon">[*]</span> Recientes</div>
   <div class="sidebar-module-body">
     <ul class="recent-list" id="sidebar-recents">
+      <li><a href="${root}articulos/grecia-syriza-y-el-patron-del-desencanto-ideologico.html">Grecia, SYRIZA y el patrón del desencanto ideológico</a><div class="recent-meta">15 ago · opinión</div></li>
       <li><a href="${root}articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html">Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia</a><div class="recent-meta">15 ago · ensayo</div></li>
       <li><a href="${root}articulos/ejemplo.html">La máquina que aprendió a quejarse</a><div class="recent-meta">12 jun · ensayo</div></li>
     </ul>
