@@ -12,7 +12,9 @@
       "title": "Grecia, SYRIZA y el patrón del desencanto ideológico",
       "summary": "Lecciones de una izquierda en el poder.",
       "date_published": "2026-08-15T00:00:00Z",
-      "tags": ["opinion"]
+      "tags": [
+        "articulo"
+      ]
     },
     {
       "id": "https://jcamposcastro21-dot.github.io/the-soft-machine/articulos/mas-alla-de-la-coincidencia-vinculos-debates-y-controversias.html",
@@ -20,7 +22,9 @@
       "title": "Más allá de la coincidencia: vínculos, debates y controversias sobre disforia de género, autismo y autoginefilia",
       "summary": "Estas condiciones psicológicas están más interrelacionadas de lo que parece a simple vista; comprenderlas sin estigmatizarlas es crucial para proporcionar diagnósticos adecuados.",
       "date_published": "2026-08-15T00:00:00Z",
-      "tags": ["ensayo"]
+      "tags": [
+        "ensayo"
+      ]
     }
   ]
 }
